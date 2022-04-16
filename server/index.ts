@@ -1,0 +1,177 @@
+import express, { Express, Request, Response } from "express";
+import { PrismaClient } from "@prisma/client";
+import cors from "cors";
+
+//import pool from "./db";
+
+interface TypedRequestBody<T> extends Express.Request {
+  body: T;
+}
+
+type PostQuestionRequestBody = {
+  title: string;
+  subject?: string;
+  categoryCode: string;
+  content: string;
+};
+
+type GetQuestionsRequestBody = {
+  categoryCode?: string;
+};
+
+const app = express();
+
+// middleware
+app.use(cors());
+app.use(express.json());
+
+const prisma = new PrismaClient();
+
+async function main() {
+  // ... you will write your Prisma Client queries here
+
+  // Questions
+
+  app.get(
+    "/questions",
+    /**
+     * GET all `questions`
+     *
+     * @param req.body.categoryCode `categoryCode` can be pass into the the request body to only
+     *    get the `questions` for that category
+     */
+    async (req, res) => {
+      try {
+        const { categoryCode } = req.query;
+        const allQuestions = await prisma.questions.findMany({
+          where: categoryCode ? { category_code: String(categoryCode) } : undefined,
+        });
+        res.json(allQuestions);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error", details: {} });
+      }
+    }
+  );
+
+  app.get(
+    "/questions/:id",
+    /**
+     * GET a `question` with `id`
+     *
+     * @param req.params.id The id of the question being requested
+     */
+    async (req, res) => {
+      try {
+        const { id: stringId } = req.params;
+        const id = Number(stringId);
+
+        const question = await prisma.questions.findUnique({
+          where: { id },
+        });
+
+        question
+          ? res.json(question)
+          : res.status(400).json({
+              message: "400 Bad Request",
+              details: { id: "This question does not exist" },
+            });
+      } catch (error) {
+        res.status(500).json({
+          message: "Internal Server Error",
+          details: {},
+        });
+      }
+    }
+  );
+
+  app.post(
+    "/questions",
+    /**
+     * POST a new `question`
+     *
+     * @param req.params.title question title
+     * @param req.params.subject question subject
+     * @param req.params.category_code The code of the category associated with the question
+     * @param req.content the question to be answered
+     * @param req.is_answered `true` only if the the question has been answered
+     */
+    async (req: TypedRequestBody<PostQuestionRequestBody>, res) => {
+      try {
+        const { title, subject, categoryCode, content } = req.body;
+
+        const newQuestion = await prisma.questions.create({
+          data: {
+            title: title,
+            subject: subject,
+            category_code: categoryCode,
+            content: content,
+            is_answered: false,
+          },
+        });
+
+        res.json(newQuestion);
+      } catch (error) {
+        console.error(error);
+        res.status(422).json({ message: "Unprocessable Entity", details: {} });
+      }
+    }
+  );
+
+  // Categories
+
+  app.get(
+    "/categories",
+    /**
+     * GET all `categories`
+     *
+     */
+    async (req, res) => {
+      try {
+        const allCategories = await prisma.categories.findMany();
+        res.json(allCategories);
+      } catch (error) {
+        console.error(error);
+        res.status(422).json({ message: "Unprocessable Entity", details: {} });
+      }
+    }
+  );
+}
+
+app.get(
+  "/categories/:code",
+  /**
+   * GET a single `category`
+   *
+   * @param req.params.code The code of the category being requested
+   */
+  async (req, res) => {
+    try {
+      const { code } = req.params;
+      const category = await prisma.categories.findUnique({
+        where: { code: code },
+      });
+      category
+        ? res.json(category)
+        : res.status(400).json({
+            message: "400 Bad Request",
+            details: { id: "This category does not exist" },
+          });
+    } catch (error) {
+      console.error(error);
+      res.status(422).json({ message: "Unprocessable Entity", details: {} });
+    }
+  }
+);
+
+main()
+  .catch((e) => {
+    throw e;
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
+
+app.listen(5000, () => {
+  console.log("server has started on port 5000");
+});

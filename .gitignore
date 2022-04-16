@@ -1,0 +1,5 @@
+/.vscode
+/.expo
+
+# macOS
+.DS_Store
