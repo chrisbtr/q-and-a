@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet, ActivityIndicator } from "react-native";
 import { Appbar, IconButton, Button, Subheading } from "react-native-paper";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -11,7 +11,13 @@ import AllCategoriesPage from "./Components/AllCategoriesPage";
 import HomePage from "./Components/HomePage";
 import AddQuestionModal from "./Components/AddQuestionPage";
 
-const Tab = createMaterialBottomTabNavigator();
+export type MainTabsParamList = {
+  Home: undefined;
+  AddQuestion: undefined;
+  AllCategories: undefined;
+};
+
+const Tab = createMaterialBottomTabNavigator<MainTabsParamList>();
 
 const Main: React.FC = () => {
   const dispatch = useDispatch();
@@ -37,7 +43,7 @@ const Main: React.FC = () => {
     return (
       <>
         <Appbar.Header>
-          <Appbar.Content />
+          <Appbar.Content title="" />
         </Appbar.Header>
         <SafeAreaView style={styles.container}>
           <IconButton icon="cloud-off-outline" />
@@ -65,7 +71,7 @@ const Main: React.FC = () => {
             }}
           />
           <Tab.Screen
-            name="Add Question"
+            name="AddQuestion"
             listeners={{ tabPress: () => setCurrentRouteName("Add Question") }}
             component={AddQuestionModal}
             options={{
@@ -79,9 +85,9 @@ const Main: React.FC = () => {
             }}
           />
           <Tab.Screen
-            name="All Categories"
+            name="AllCategories"
             listeners={{
-              tabPress: () => setCurrentRouteName("All Categories"),
+              tabPress: () => setCurrentRouteName("AllCategories"),
             }}
             component={AllCategoriesPage}
             options={{
@@ -98,10 +104,10 @@ const Main: React.FC = () => {
   return (
     <>
       <Appbar.Header>
-        <Appbar.Content />
+        <Appbar.Content title="" />
       </Appbar.Header>
-      <SafeAreaView>
-        <Button loading></Button>
+      <SafeAreaView style={styles.container}>
+        <ActivityIndicator size='large' />
       </SafeAreaView>
     </>
   );

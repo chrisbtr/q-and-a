@@ -5,17 +5,36 @@ import {
   createNativeStackNavigator,
   NativeStackScreenProps,
 } from "@react-navigation/native-stack";
+import { MaterialBottomTabNavigationProp } from "@react-navigation/material-bottom-tabs";
 import { useSelector } from "react-redux";
 
 import { RootState } from "../store";
+import { MainTabsParamList } from "../Main";
 import CategoryPage from "./CategoryPage";
 import CategoryCard from "./CategoryCard";
 
-const Stack = createNativeStackNavigator();
+export type AllCategoriesParamList = {
+  Categories: undefined;
+  Category: {
+    categoryCode: string;
+  };
+};
 
-const AllCategoriesPage: React.FC<
-  NativeStackScreenProps<AllCategoriesPrams, "Categories">
-> = ({ navigation }) => {
+export type AllCategoriesPageProps = NativeStackScreenProps<
+AllCategoriesParamList,
+  "Categories"
+>;
+
+export type AllCategoriesPageStackProps = MaterialBottomTabNavigationProp<
+  MainTabsParamList,
+  "AddQuestion"
+>;
+
+const Stack = createNativeStackNavigator<AllCategoriesParamList>();
+
+const AllCategoriesPage: React.FC<AllCategoriesPageProps> = ({
+  navigation,
+}) => {
   const categories = useSelector(
     (state: RootState) => state.categories.categories
   );
@@ -38,14 +57,7 @@ const AllCategoriesPage: React.FC<
   );
 };
 
-export type AllCategoriesPrams = {
-  Categories: undefined;
-  Category: {
-    categoryCode: string;
-  };
-};
-
-const AllCategoriesPageStack: React.FC = () => {
+const AllCategoriesPageStack: React.FC<AllCategoriesPageStackProps> = () => {
   const theme = useTheme();
   return (
     <Stack.Navigator
@@ -53,7 +65,7 @@ const AllCategoriesPageStack: React.FC = () => {
       screenOptions={{
         headerBackTitle: "Back",
         headerStyle: { backgroundColor: theme.colors.primary },
-        headerTintColor: theme.colors.background
+        headerTintColor: theme.colors.background,
       }}
     >
       <Stack.Screen name="Categories" component={AllCategoriesPage} />
@@ -61,10 +73,11 @@ const AllCategoriesPageStack: React.FC = () => {
     </Stack.Navigator>
   );
 };
-export default AllCategoriesPageStack;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
 });
+
+export default AllCategoriesPageStack;

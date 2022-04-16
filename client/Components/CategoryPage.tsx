@@ -1,10 +1,10 @@
 import React from "react";
 import { Text, SafeAreaView } from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
-import { AllCategoriesPrams } from "./AllCategoriesPage";
+import { AllCategoriesParamList } from "./AllCategoriesPage";
 
 const CategoryPage: React.FC = () => {
-  const route = useRoute<RouteProp<AllCategoriesPrams, "Category">>();
+  const route = useRoute<RouteProp<AllCategoriesParamList, "Category">>();
 
   return (
     <SafeAreaView>
