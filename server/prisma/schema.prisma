@@ -9,9 +9,9 @@ datasource db {
 
 model answers {
   id          Int       @id @default(autoincrement())
-  question_id Int
+  questionId  Int
   content     String    @db.VarChar(255)
-  questions   questions @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_question_id")
+  questions   questions @relation(fields: [questionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_question_id")
 }
 
 model categories {
@@ -23,11 +23,11 @@ model categories {
 
 model questions {
   id            Int        @id @default(autoincrement())
-  category_code String     @db.VarChar(100)
-  is_answered   Boolean
+  categoryCode  String     @db.VarChar(100)
+  isAnswered    Boolean
   title         String     @db.VarChar(20)
   subject       String?    @default("") @db.VarChar(100)
   content       String     @db.VarChar(255)
-  categories    categories @relation(fields: [category_code], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "fk_category_code")
+  categories    categories @relation(fields: [categoryCode], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "fk_category_code")
   answers       answers[]
 }
