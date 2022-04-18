@@ -1,16 +1,69 @@
 import React from "react";
-import { Text, SafeAreaView } from "react-native";
+import { StyleSheet, SafeAreaView, ScrollView, View } from "react-native";
+import { Subheading, Button } from "react-native-paper";
 import { useRoute, RouteProp } from "@react-navigation/native";
-import { AllCategoriesParamList } from "./AllCategoriesPage";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-const CategoryPage: React.FC = () => {
+import { AllCategoriesParamList } from "./AllCategoriesPage";
+import QuestionCard from "./QuestionCard";
+
+export type CategoryPageProps = NativeStackScreenProps<
+  AllCategoriesParamList,
+  "Category"
+>;
+
+const CategoryPage: React.FC<CategoryPageProps> = ({ navigation }) => {
   const route = useRoute<RouteProp<AllCategoriesParamList, "Category">>();
+  const { category } = route.params;
+
+  React.useEffect(() => {
+    navigation.setOptions({ headerTitle: route.params.category.name });
+  }, []);
 
   return (
     <SafeAreaView>
-      <Text>{route.params.categoryCode}</Text>
+      <ScrollView>
+        {category.questions.length ? (
+          category.questions.map((question) => (
+            <QuestionCard
+              id={question.id}
+              key={`${category.code}_${question.id}`}
+              category={category.name}
+              subject={question.subject}
+              answer={question.answer}
+              question={question.content}
+            />
+          ))
+        ) : (
+          <View style={styles.noQuestions}>
+            <Subheading style={styles.subheading}>
+              No questions added yet
+            </Subheading>
+            <Button icon="plus-box-outline">Add a question</Button>
+            <Button
+              icon="keyboard-backspace"
+              onPress={() => navigation.goBack()}
+            >
+              Go Back
+            </Button>
+          </View>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  noQuestions: {
+    padding: 14,
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  subheading: {
+    textAlign: "center",
+  },
+});
 
 export default CategoryPage;
