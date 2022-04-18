@@ -75,6 +75,7 @@ const Main: React.FC = () => {
             listeners={{ tabPress: () => setCurrentRouteName("Add Question") }}
             component={AddQuestionModal}
             options={{
+              title: "Add Question",
               tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons
                   name="plus-circle-outline"
@@ -91,6 +92,7 @@ const Main: React.FC = () => {
             }}
             component={AllCategoriesPage}
             options={{
+              title: "All Categories",
               tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons name="menu" color={color} size={26} />
               ),
@@ -107,7 +109,7 @@ const Main: React.FC = () => {
         <Appbar.Content title="" />
       </Appbar.Header>
       <SafeAreaView style={styles.container}>
-        <ActivityIndicator size='large' />
+        <ActivityIndicator size="large" />
       </SafeAreaView>
     </>
   );
