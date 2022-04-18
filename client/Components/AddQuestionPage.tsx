@@ -2,9 +2,7 @@ import * as React from "react";
 import { StyleSheet, View, SafeAreaView } from "react-native";
 import {
   Button,
-  Provider,
   TextInput,
-  Divider,
   Chip,
   Subheading,
   Appbar,
@@ -47,12 +45,14 @@ const AddQuestionPage: React.FC = () => {
       <SafeAreaView>
         <View style={styles.container}>
           <TextInput
+            autoComplete="on"
             mode="outlined"
             label="Question Subject"
             value={subjectText}
             onChangeText={onChangeSubjectText}
           />
           <TextInput
+            autoComplete="on"
             mode="outlined"
             label="Your Question"
             value={questionText}
@@ -60,8 +60,10 @@ const AddQuestionPage: React.FC = () => {
             multiline={true}
             numberOfLines={10}
           />
-          <View style={styles.categorySelectContainer}>
-            <Subheading>Select A Category</Subheading>
+          <View>
+            <Subheading style={styles.categorySelectSubheading}>
+              Select A Category
+            </Subheading>
             <View style={styles.categorySelectContainer}>
               {categories.map((category) => (
                 <Chip
@@ -89,6 +91,9 @@ const styles = StyleSheet.create({
     marginRight: 5,
     marginLeft: 5,
     padding: 20,
+  },
+  categorySelectSubheading: {
+    alignSelf: "center",
   },
   categorySelectContainer: {
     flexDirection: "row",
