@@ -1,9 +1,11 @@
 import entryPoint from "./entryPoint";
+import { Question } from "./questions";
 
 export type Category = {
   code: string;
   name: string;
   description: string;
+  questions: Question[];
 };
 
 export const categoriesApi = {

@@ -12,8 +12,8 @@ export type Question = {
 type QuestionResponseData = {
   id: number;
   title: string;
-  category_code: string;
-  is_answered: boolean;
+  categoryCode: string;
+  isAnswered: boolean;
   content: string;
   subject?: string;
 };

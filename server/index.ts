@@ -1,8 +1,6 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
-
-//import pool from "./db";
 
 interface TypedRequestBody<T> extends Express.Request {
   body: T;
@@ -92,9 +90,9 @@ async function main() {
      *
      * @param req.params.title question title
      * @param req.params.subject question subject
-     * @param req.params.category_code The code of the category associated with the question
+     * @param req.params.categoryCode The code of the category associated with the question
      * @param req.content the question to be answered
-     * @param req.is_answered `true` only if the the question has been answered
+     * @param req.isAnswered `true` only if the the question has been answered
      */
     async (req: TypedRequestBody<PostQuestionRequestBody>, res) => {
       try {
@@ -104,9 +102,9 @@ async function main() {
           data: {
             title: title,
             subject: subject,
-            category_code: categoryCode,
+            categoryCode: categoryCode,
             content: content,
-            is_answered: false,
+            isAnswered: false,
           },
         });
 
@@ -128,7 +126,9 @@ async function main() {
      */
     async (req, res) => {
       try {
-        const allCategories = await prisma.categories.findMany();
+        const allCategories = await prisma.categories.findMany({
+          include: { questions: { include: { answers: true } } },
+        });
         res.json(allCategories);
       } catch (error) {
         console.error(error);
