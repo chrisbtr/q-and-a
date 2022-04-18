@@ -9,6 +9,7 @@ import { MaterialBottomTabNavigationProp } from "@react-navigation/material-bott
 import { useSelector } from "react-redux";
 
 import { RootState } from "../store";
+import { Category } from "../api/categories";
 import { MainTabsParamList } from "../Main";
 import CategoryPage from "./CategoryPage";
 import CategoryCard from "./CategoryCard";
@@ -16,12 +17,12 @@ import CategoryCard from "./CategoryCard";
 export type AllCategoriesParamList = {
   Categories: undefined;
   Category: {
-    categoryCode: string;
+    category: Category;
   };
 };
 
 export type AllCategoriesPageProps = NativeStackScreenProps<
-AllCategoriesParamList,
+  AllCategoriesParamList,
   "Categories"
 >;
 
@@ -47,9 +48,9 @@ const AllCategoriesPage: React.FC<AllCategoriesPageProps> = ({
             key={index}
             title={category.name}
             source={{ uri: "https://picsum.photos/700" }}
-            viewCategoryHandler={() =>
-              navigation.navigate("Category", { categoryCode: category.code })
-            }
+            viewCategoryHandler={() => {
+              navigation.navigate("Category", { category });
+            }}
           />
         ))}
       </ScrollView>
@@ -65,6 +66,7 @@ const AllCategoriesPageStack: React.FC<AllCategoriesPageStackProps> = () => {
       screenOptions={{
         headerBackTitle: "Back",
         headerStyle: { backgroundColor: theme.colors.primary },
+        headerTitleStyle: { ...theme.fonts.medium },
         headerTintColor: theme.colors.background,
       }}
     >
