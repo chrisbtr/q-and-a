@@ -39,10 +39,10 @@ export const categoriesSlice = createSlice({
       state.categories = payload;
       state.loading = "succeeded";
     });
-    builder.addCase(fetchAllCategories.pending, (state, { payload }) => {
+    builder.addCase(fetchAllCategories.pending, (state) => {
       state.loading = "pending";
     });
-    builder.addCase(fetchAllCategories.rejected, (state, { payload }) => {
+    builder.addCase(fetchAllCategories.rejected, (state) => {
       state.loading = "failed";
     });
   },
