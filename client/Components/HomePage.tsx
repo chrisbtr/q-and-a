@@ -2,13 +2,56 @@ import React from "react";
 import { StyleSheet, SafeAreaView, ScrollView, View } from "react-native";
 import { Appbar, Portal } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
+import { MaterialBottomTabScreenProps } from "@react-navigation/material-bottom-tabs";
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from "@react-navigation/native-stack";
 
 import { RootState } from "../store";
-import { fetchAllQuestions, reset } from "../features/questionsSlice";
+import { MainTabsParamList } from "../Main";
+import { fetchAllQuestions } from "../features/questionsSlice";
 import QuestionCard from "./QuestionCard";
 import QuestionModal from "./QuestionModal";
 
-const HomePage: React.FC<{}> = () => {
+export type HomePageStackParamList = {
+  HomePage: undefined;
+};
+
+export type HomePageStackProps = MaterialBottomTabScreenProps<
+  MainTabsParamList,
+  "Home"
+>;
+
+export type HomePageProps = NativeStackScreenProps<
+  HomePageStackParamList,
+  "HomePage"
+>;
+
+const Stack = createNativeStackNavigator();
+
+const HomePageStack: React.FC<HomePageStackProps> = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="HomePage"
+        options={{
+          title: "Home",
+          header: ({ options }) => (
+            <Appbar.Header>
+              <Appbar.Content title={options.title} />
+              <Appbar.Action icon="magnify" onPress={() => {}} />
+              <Appbar.Action icon="dots-horizontal" onPress={() => {}} />
+            </Appbar.Header>
+          ),
+        }}
+        component={HomePage}
+      ></Stack.Screen>
+    </Stack.Navigator>
+  );
+};
+
+const HomePage: React.FC<HomePageProps> = () => {
   const dispatch = useDispatch();
   const { questions, categories } = useSelector((state: RootState) => ({
     questions: state.questions.questions,
@@ -31,38 +74,39 @@ const HomePage: React.FC<{}> = () => {
   };
 
   React.useEffect(() => {
-    dispatch(reset());
     dispatch(fetchAllQuestions());
   }, []);
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        {questions.map(({ id, subject, categoryCode, content, answer }) => (
-          <QuestionCard
-            key={id}
-            id={id}
-            subject={subject}
-            category={getCategoryName(categoryCode) || ""}
-            question={content}
-            answer={answer}
-            onPress={onPressHandler}
-          />
-        ))}
-      </ScrollView>
-      {selectedQuestion ? (
-        <Portal>
-          <QuestionModal
-            subject={selectedQuestion.subject || ""}
-            category={getCategoryName(selectedQuestion.categoryCode) || ""}
-            question={selectedQuestion.content}
-            answer={selectedQuestion.answer || ""}
-            ModalProps={{
-              visible: isModalOpen,
-              onDismiss: () => setIsModalOpen(false),
-            }}
-          />
-        </Portal>
-      ) : null}
+      <View>
+        <ScrollView>
+          {questions.map(({ id, subject, categoryCode, content, answer }) => (
+            <QuestionCard
+              key={id}
+              id={id}
+              subject={subject}
+              category={getCategoryName(categoryCode) || ""}
+              question={content}
+              answer={answer}
+              onPress={onPressHandler}
+            />
+          ))}
+        </ScrollView>
+        {selectedQuestion ? (
+          <Portal>
+            <QuestionModal
+              subject={selectedQuestion.subject || ""}
+              category={getCategoryName(selectedQuestion.categoryCode) || ""}
+              question={selectedQuestion.content}
+              answer={selectedQuestion.answer || ""}
+              ModalProps={{
+                visible: isModalOpen,
+                onDismiss: () => setIsModalOpen(false),
+              }}
+            />
+          </Portal>
+        ) : null}
+      </View>
     </SafeAreaView>
   );
 };
@@ -77,4 +121,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomePage;
+export default HomePageStack;
