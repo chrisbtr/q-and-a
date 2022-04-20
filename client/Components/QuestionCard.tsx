@@ -55,11 +55,14 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
+    alignSelf: "center",
     borderRadius: 20,
     marginTop: 12,
     marginBottom: 24,
     marginLeft: 12,
     marginRight: 12,
+    height: 200,
+    width: 300,
   },
   title: {
     textAlign: "center",
