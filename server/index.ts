@@ -100,6 +100,11 @@ async function main() {
   app.post(
     "/questions",
     checkAuth,
+    body("userData").exists({ checkFalsy: true }),
+    body("title").isString(),
+    body("subject").isString(),
+    body("categoryCode").isString(),
+    body("content").isString(),
     /**
      * POST a new `question`
      *
@@ -109,10 +114,14 @@ async function main() {
      * @param req.content the question to be answered
      * @param req.isAnswered `true` only if the the question has been answered
      */
-    async (req: TypedRequestBody<PostQuestionRequestBody>, res) => {
+    async (req: Request, res: Response) => {
       try {
-        const { title, subject, categoryCode, content } = req.body;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
 
+        const { title, subject, categoryCode, content } = req.body;
         const newQuestion = await prisma.questions.create({
           data: {
             title: title,
