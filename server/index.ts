@@ -1,6 +1,11 @@
-import express, { Express } from "express";
+import express, { Express, Request, Response } from "express";
+import { body, validationResult } from "express-validator";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
+import * as bcrypt from "bcrypt";
+
+import users from "./routes/users";
+import checkAuth from "./middleware/check-auth";
 
 interface TypedRequestBody<T> extends Express.Request {
   body: T;
@@ -26,7 +31,8 @@ app.use(express.json());
 const prisma = new PrismaClient();
 
 async function main() {
-  // ... you will write your Prisma Client queries here
+  // User
+  app.use("/users", users);
 
   // Questions
 
@@ -40,9 +46,15 @@ async function main() {
      */
     async (req, res) => {
       try {
-        const { categoryCode } = req.query;
+        const { categoryCode, take = 30, skip = 0 } = req.query;
+
         const allQuestions = await prisma.questions.findMany({
-          where: categoryCode ? { category_code: String(categoryCode) } : undefined,
+          where: categoryCode
+            ? { categoryCode: String(categoryCode) }
+            : undefined,
+
+          take: Number(take),
+          skip: Number(skip),
         });
         res.json(allQuestions);
       } catch (error) {
@@ -85,6 +97,7 @@ async function main() {
 
   app.post(
     "/questions",
+    checkAuth,
     /**
      * POST a new `question`
      *
