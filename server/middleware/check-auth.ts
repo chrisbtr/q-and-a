@@ -8,8 +8,12 @@ const checkAuth = (req: Request, res: Response, next: NextFunction) => {
       return res.status(401).json({ message: "Auth failed" });
     }
 
-    verify(token, "private");
-    next();
+    if (process.env.SECRET_KEY) {
+      req.body.userData = verify(token, process.env.SECRET_KEY);
+      next();
+    } else {
+      res.status(500).json({ message: "ENV" });
+    }
   } catch (error) {
     return res.status(401).json({ message: "Auth failed" });
   }

@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
-import * as bcrypt from "bcrypt";
+import { config } from "dotenv";
 
 import users from "./routes/users";
 import checkAuth from "./middleware/check-auth";
@@ -21,6 +21,8 @@ type PostQuestionRequestBody = {
 type GetQuestionsRequestBody = {
   categoryCode?: string;
 };
+
+config();
 
 const app = express();
 
