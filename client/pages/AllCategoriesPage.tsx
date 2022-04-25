@@ -10,9 +10,9 @@ import { useSelector } from "react-redux";
 
 import { RootState } from "../store";
 import { Category } from "../api/categories";
-import { MainTabsParamList } from "../Main";
+import { MainTabsParamList } from "./Main";
 import CategoryPage from "./CategoryPage";
-import CategoryCard from "./CategoryCard";
+import CategoryCard from "../Components/CategoryCard";
 
 export type AllCategoriesParamList = {
   Categories: undefined;

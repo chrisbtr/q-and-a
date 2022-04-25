@@ -15,11 +15,11 @@ import {
 } from "@react-navigation/native-stack";
 
 import { RootState } from "../store";
-import { MainTabsParamList } from "../Main";
+import { MainTabsParamList } from "./Main";
 import { fetchAllQuestions } from "../features/questionsSlice";
-import QuestionCard from "./QuestionCard";
-import QuestionModal from "./QuestionModal";
-import CategoryCard from "./CategoryCard";
+import QuestionCard from "../Components/QuestionCard";
+import QuestionModal from "../Components/QuestionModal";
+import CategoryCard from "../Components/CategoryCard";
 
 export type HomePageStackParamList = {
   HomePage: undefined;

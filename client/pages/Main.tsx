@@ -5,11 +5,11 @@ import { Appbar, IconButton, Button, Subheading } from "react-native-paper";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { RootState } from "./store";
-import { fetchAllCategories, reset } from "./features/categoriesSlice";
-import AllCategoriesPage from "./Components/AllCategoriesPage";
-import HomePage from "./Components/HomePage";
-import AddQuestionModal from "./Components/AddQuestionPage";
+import { RootState } from "../store";
+import { fetchAllCategories, reset } from "../features/categoriesSlice";
+import AllCategoriesPage from "./AllCategoriesPage";
+import HomePage from "./HomePage";
+import AddQuestionModal from "./AddQuestionPage";
 
 export type MainTabsParamList = {
   Home: undefined;

@@ -5,7 +5,7 @@ import { useRoute, RouteProp } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { AllCategoriesParamList } from "./AllCategoriesPage";
-import QuestionCard from "./QuestionCard";
+import QuestionCard from "../Components/QuestionCard";
 
 export type CategoryPageProps = NativeStackScreenProps<
   AllCategoriesParamList,

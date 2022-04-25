@@ -5,7 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 
 import theme from "./theme";
 import store from "./store";
-import Main from "./Main";
+import Main from "./pages/Main";
 
 export default function App() {
   return (
