@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { StyleSheet, View, SafeAreaView } from "react-native";
 import {
   Button,
@@ -7,11 +7,47 @@ import {
   Subheading,
   Appbar,
 } from "react-native-paper";
+import { MaterialBottomTabScreenProps } from "@react-navigation/material-bottom-tabs";
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from "@react-navigation/native-stack";
 import { useSelector } from "react-redux";
 
+import { MainTabsParamList } from "./Main";
 import { RootState } from "../store";
+import StackHeader from "../Components/StackHeader";
 
-const AddQuestionPage: React.FC = () => {
+export type AddQuestionStackParamList = {
+  AddQuestionPage: undefined;
+};
+
+export type HomePageStackProps = MaterialBottomTabScreenProps<
+  MainTabsParamList,
+  "AddQuestion"
+>;
+
+export type AddQuestionProps = NativeStackScreenProps<
+  AddQuestionStackParamList,
+  "AddQuestionPage"
+>;
+
+const Stack = createNativeStackNavigator();
+
+const HomePageStack: React.FC<HomePageStackProps> = () => (
+  <Stack.Navigator>
+    <Stack.Screen
+      name="AddQuestionPage"
+      options={{
+        title: "Add Questions",
+        header: (props) => <StackHeader showSearch={false} {...props} />,
+      }}
+      component={AddQuestionPage}
+    ></Stack.Screen>
+  </Stack.Navigator>
+);
+
+export const AddQuestionPage: React.FC<AddQuestionProps> = () => {
   const categories = useSelector(
     (state: RootState) => state.categories.categories
   );
@@ -37,51 +73,45 @@ const AddQuestionPage: React.FC = () => {
   };
 
   return (
-    <View>
-      <Appbar.Header>
-        <Appbar.Content title="Add Question" />
-      </Appbar.Header>
-
-      <SafeAreaView>
-        <View style={styles.container}>
-          <TextInput
-            autoComplete="on"
-            mode="outlined"
-            label="Question Subject"
-            value={subjectText}
-            onChangeText={onChangeSubjectText}
-          />
-          <TextInput
-            autoComplete="on"
-            mode="outlined"
-            label="Your Question"
-            value={questionText}
-            onChangeText={onChangeQuestionText}
-            multiline={true}
-            numberOfLines={10}
-          />
-          <View>
-            <Subheading style={styles.categorySelectSubheading}>
-              Select A Category
-            </Subheading>
-            <View style={styles.categorySelectContainer}>
-              {categories.map((category) => (
-                <Chip
-                  key={category.code}
-                  mode="outlined"
-                  onPress={handleCategoryChange(category.code)}
-                  selected={category.code === selectedCategory}
-                >
-                  {category.name}
-                </Chip>
-              ))}
-            </View>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <TextInput
+          autoComplete="on"
+          mode="outlined"
+          label="Question Subject"
+          value={subjectText}
+          onChangeText={onChangeSubjectText}
+        />
+        <TextInput
+          autoComplete="on"
+          mode="outlined"
+          label="Your Question"
+          value={questionText}
+          onChangeText={onChangeQuestionText}
+          multiline={true}
+          numberOfLines={10}
+        />
+        <View>
+          <Subheading style={styles.categorySelectSubheading}>
+            Select A Category
+          </Subheading>
+          <View style={styles.categorySelectContainer}>
+            {categories.map((category) => (
+              <Chip
+                key={category.code}
+                mode="outlined"
+                onPress={handleCategoryChange(category.code)}
+                selected={category.code === selectedCategory}
+              >
+                {category.name}
+              </Chip>
+            ))}
           </View>
         </View>
+      </View>
 
-        <Button>Submit</Button>
-      </SafeAreaView>
-    </View>
+      <Button>Submit</Button>
+    </SafeAreaView>
   );
 };
 
@@ -103,4 +133,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddQuestionPage;
+export default HomePageStack;

@@ -13,6 +13,7 @@ import { Category } from "../api/categories";
 import { MainTabsParamList } from "./Main";
 import CategoryPage from "./CategoryPage";
 import CategoryCard from "../Components/CategoryCard";
+import StackHeader from "../Components/StackHeader";
 
 export type AllCategoriesParamList = {
   Categories: undefined;
@@ -70,7 +71,14 @@ const AllCategoriesPageStack: React.FC<AllCategoriesPageStackProps> = () => {
         headerTintColor: theme.colors.background,
       }}
     >
-      <Stack.Screen name="Categories" component={AllCategoriesPage} />
+      <Stack.Screen
+        name="Categories"
+        component={AllCategoriesPage}
+        options={{
+          title: "All Categories",
+          header: (props) => <StackHeader {...props} />,
+        }}
+      />
       <Stack.Screen name="Category" component={CategoryPage} />
     </Stack.Navigator>
   );

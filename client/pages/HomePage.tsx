@@ -1,12 +1,6 @@
 import React from "react";
 import { StyleSheet, SafeAreaView, ScrollView, View } from "react-native";
-import {
-  Appbar,
-  Portal,
-  Searchbar,
-  Subheading,
-  Button,
-} from "react-native-paper";
+import { Portal, Subheading, Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialBottomTabScreenProps } from "@react-navigation/material-bottom-tabs";
 import {
@@ -17,6 +11,7 @@ import {
 import { RootState } from "../store";
 import { MainTabsParamList } from "./Main";
 import { fetchAllQuestions } from "../features/questionsSlice";
+import StackHeader from "../Components/StackHeader";
 import QuestionCard from "../Components/QuestionCard";
 import QuestionModal from "../Components/QuestionModal";
 import CategoryCard from "../Components/CategoryCard";
@@ -38,39 +33,13 @@ export type HomePageProps = NativeStackScreenProps<
 const Stack = createNativeStackNavigator();
 
 const HomePageStack: React.FC<HomePageStackProps> = () => {
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [searching, setSearching] = React.useState(false);
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="HomePage"
         options={{
           title: "Home",
-          header: ({ options }) =>
-            !searching ? (
-              <Appbar.Header>
-                <Appbar.Content title={options.title} />
-                <Appbar.Action
-                  icon="magnify"
-                  onPress={() => {
-                    setSearching(true);
-                  }}
-                />
-                <Appbar.Action icon="dots-horizontal" onPress={() => {}} />
-              </Appbar.Header>
-            ) : (
-              <Appbar.Header>
-                <Searchbar
-                  style={styles.searchBar}
-                  autoFocus
-                  value={searchQuery}
-                  placeholder="Search"
-                  onChangeText={(text) => setSearchQuery(text)}
-                  onSubmitEditing={() => setSearching(false)}
-                  onEndEditing={() => setSearching(false)}
-                />
-              </Appbar.Header>
-            ),
+          header: (props) => <StackHeader {...props} />,
         }}
         component={HomePage}
       ></Stack.Screen>
@@ -163,7 +132,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   searchBar: {
-    width: "100%",
+    width: "70%",
     height: "70%",
   },
   subheading: {
