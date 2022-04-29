@@ -10,14 +10,17 @@ export interface StackHeaderProps extends NativeStackHeaderProps {
 const StackHeader: React.FC<StackHeaderProps> = ({
   showSearch = true,
   options,
-  back,
   navigation,
 }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [searching, setSearching] = React.useState(false);
+  const hasBackButton = navigation.canGoBack();
+
   return (
     <Appbar.Header>
-      {back ? <Appbar.BackAction onPress={() => navigation.goBack()} /> : null}
+      {hasBackButton ? (
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+      ) : null}
       <Appbar.Content title={options.title} />
       {showSearch ? (
         !searching ? (
