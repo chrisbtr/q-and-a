@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, SafeAreaView, ScrollView, View } from "react-native";
-import { Portal, Subheading, Button } from "react-native-paper";
+import { Portal, Subheading, Button, Text } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialBottomTabScreenProps } from "@react-navigation/material-bottom-tabs";
 import {
@@ -15,9 +15,15 @@ import StackHeader from "../Components/StackHeader";
 import QuestionCard from "../Components/QuestionCard";
 import QuestionModal from "../Components/QuestionModal";
 import CategoryCard from "../Components/CategoryCard";
+import CategoryPage from "./CategoryPage";
+import { Category } from "../api/categories";
 
 export type HomePageStackParamList = {
   HomePage: undefined;
+  AllQuestions: undefined;
+  Category: {
+    category: Category;
+  };
 };
 
 export type HomePageStackProps = MaterialBottomTabScreenProps<
@@ -30,7 +36,7 @@ export type HomePageProps = NativeStackScreenProps<
   "HomePage"
 >;
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<HomePageStackParamList>();
 
 const HomePageStack: React.FC<HomePageStackProps> = () => {
   return (
@@ -43,11 +49,31 @@ const HomePageStack: React.FC<HomePageStackProps> = () => {
         }}
         component={HomePage}
       ></Stack.Screen>
+      <Stack.Screen
+        name="Category"
+        options={(props) => ({
+          title: props.route.params.category.name,
+          header: (props) => <StackHeader {...props} />,
+        })}
+        component={CategoryPage}
+      />
+      <Stack.Screen
+        name="AllQuestions"
+        options={{
+          title: "Questions",
+          header: (props) => <StackHeader {...props} />,
+        }}
+        component={() => (
+          <View>
+            <Text>TODO: Add all questions page</Text>
+          </View>
+        )}
+      ></Stack.Screen>
     </Stack.Navigator>
   );
 };
 
-const HomePage: React.FC<HomePageProps> = () => {
+export const HomePage: React.FC<HomePageProps> = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const { questions, categories } = useSelector((state: RootState) => ({
@@ -96,7 +122,12 @@ const HomePage: React.FC<HomePageProps> = () => {
                 )
               )}
             </View>
-            <Button style={{ alignSelf: "center" }}>View More</Button>
+            <Button
+              style={{ alignSelf: "center" }}
+              onPress={() => navigation.navigate("AllQuestions")}
+            >
+              View More
+            </Button>
           </ScrollView>
 
           <Subheading style={styles.subheading}>Categories</Subheading>
@@ -105,6 +136,9 @@ const HomePage: React.FC<HomePageProps> = () => {
               title={category.name}
               key={`home_page_category_${category.code}`}
               source={{ uri: "https://picsum.photos/700" }}
+              viewCategoryHandler={() => {
+                navigation.navigate("Category", { category });
+              }}
             />
           ))}
         </ScrollView>
