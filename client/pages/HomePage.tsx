@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, SafeAreaView, ScrollView, View } from "react-native";
-import { Portal, Subheading, Button, Text } from "react-native-paper";
+import { Portal, Subheading, Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialBottomTabScreenProps } from "@react-navigation/material-bottom-tabs";
 import {
@@ -11,12 +11,13 @@ import {
 import { RootState } from "../store";
 import { MainTabsParamList } from "./Main";
 import { fetchAllQuestions } from "../features/questionsSlice";
+import { Category } from "../api/categories";
+import CategoryPage from "./CategoryPage";
+import AllQuestionsPage from "./AllQuestionsPage";
 import StackHeader from "../Components/StackHeader";
 import QuestionCard from "../Components/QuestionCard";
 import QuestionModal from "../Components/QuestionModal";
 import CategoryCard from "../Components/CategoryCard";
-import CategoryPage from "./CategoryPage";
-import { Category } from "../api/categories";
 
 export type HomePageStackParamList = {
   HomePage: undefined;
@@ -40,34 +41,29 @@ const Stack = createNativeStackNavigator<HomePageStackParamList>();
 
 const HomePageStack: React.FC<HomePageStackProps> = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{ header: (props) => <StackHeader {...props} /> }}
+    >
       <Stack.Screen
         name="HomePage"
         options={{
           title: "Home",
-          header: (props) => <StackHeader {...props} />,
         }}
         component={HomePage}
       ></Stack.Screen>
       <Stack.Screen
         name="Category"
-        options={(props) => ({
-          title: props.route.params.category.name,
-          header: (props) => <StackHeader {...props} />,
+        options={({ route }) => ({
+          title: route.params.category.name,
         })}
         component={CategoryPage}
       />
       <Stack.Screen
         name="AllQuestions"
         options={{
-          title: "Questions",
-          header: (props) => <StackHeader {...props} />,
+          title: "All Questions",
         }}
-        component={() => (
-          <View>
-            <Text>TODO: Add all questions page</Text>
-          </View>
-        )}
+        component={AllQuestionsPage}
       ></Stack.Screen>
     </Stack.Navigator>
   );
