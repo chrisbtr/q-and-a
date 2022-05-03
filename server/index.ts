@@ -121,7 +121,8 @@ async function main() {
           return res.status(400).json({ errors: errors.array() });
         }
 
-        const { title, subject, categoryCode, content } = req.body;
+        const { title, subject, categoryCode, content, userData } = req.body;
+        const date = new Date();
         const newQuestion = await prisma.questions.create({
           data: {
             title: title,
@@ -129,6 +130,8 @@ async function main() {
             categoryCode: categoryCode,
             content: content,
             isAnswered: false,
+            createdAt: date,
+            userId: userData.userId,
           },
         });
 

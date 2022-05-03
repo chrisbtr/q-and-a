@@ -8,11 +8,12 @@ datasource db {
 }
 
 model user {
-  id        Int    @id @default(autoincrement())
-  firstName String @db.VarChar(255)
-  lastName  String @db.VarChar(255)
-  email     String @unique @db.VarChar(255)
+  id        Int         @id @default(autoincrement())
+  firstName String      @db.VarChar(255)
+  lastName  String      @db.VarChar(255)
+  email     String      @unique @db.VarChar(255)
   password  String
+  questions questions[]
 }
 
 model answers {
@@ -31,11 +32,15 @@ model categories {
 
 model questions {
   id           Int        @id @default(autoincrement())
+  userId       Int
   categoryCode String     @db.VarChar(100)
   isAnswered   Boolean
   title        String     @db.VarChar(20)
   subject      String?    @default("") @db.VarChar(100)
   content      String     @db.VarChar(255)
+  createdAt    DateTime
+  editedAt     DateTime?
+  user         user       @relation(fields: [userId], references: [id])
   categories   categories @relation(fields: [categoryCode], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "fk_category_code")
   answers      answers[]
 }
