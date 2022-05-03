@@ -1,10 +1,10 @@
 // IMPORTANT: This is a sample file! 
 // Please create a copy of this file in this directory, rename the copy to "seed.ts", and remove this comment 
-import { PrismaClient, categories } from "@prisma/client";
+import { PrismaClient, Categories } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const CATAGORIES: categories[] = [];
+const CATAGORIES: Categories[] = [];
 
 async function main() {
   for (const category of CATAGORIES) {
