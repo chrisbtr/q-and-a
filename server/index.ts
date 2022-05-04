@@ -4,8 +4,9 @@ import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import { config } from "dotenv";
 
-import users from "./routes/users";
 import checkAuth from "./middleware/check-auth";
+import users from "./routes/users";
+import answers from "./routes/answers";
 
 interface TypedRequestBody<T> extends Express.Request {
   body: T;
@@ -35,6 +36,9 @@ const prisma = new PrismaClient();
 async function main() {
   // User
   app.use("/users", users);
+
+  // Answers
+  app.use("/answers", answers);
 
   // Questions
 
