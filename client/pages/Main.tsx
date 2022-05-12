@@ -33,8 +33,6 @@ const Main: React.FC = () => {
 
   const loading = useSelector((state: RootState) => state.categories.loading);
 
-  const [currentRouteName, setCurrentRouteName] = React.useState("Home");
-
   if (loading === "idle") {
     handleGetCategories();
   }
@@ -61,7 +59,6 @@ const Main: React.FC = () => {
       <>
         <Tab.Navigator initialRouteName="Home" shifting>
           <Tab.Screen
-            listeners={{ tabPress: () => setCurrentRouteName("Home") }}
             name="Home"
             component={HomePage}
             options={{
@@ -72,7 +69,6 @@ const Main: React.FC = () => {
           />
           <Tab.Screen
             name="AddQuestion"
-            listeners={{ tabPress: () => setCurrentRouteName("Add Question") }}
             component={AddQuestionModal}
             options={{
               title: "Add Question",
@@ -87,9 +83,6 @@ const Main: React.FC = () => {
           />
           <Tab.Screen
             name="AllCategories"
-            listeners={{
-              tabPress: () => setCurrentRouteName("AllCategories"),
-            }}
             component={AllCategoriesPage}
             options={{
               title: "All Categories",

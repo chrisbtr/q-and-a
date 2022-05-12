@@ -48,7 +48,7 @@ const StackHeader: React.FC<StackHeaderProps> = ({
         style={{ backgroundColor: "gray" }}
         color="white"
       />
-      <Appbar.Action icon="dots-horizontal" onPress={() => {}} />
+      <Appbar.Action icon="dots-horizontal" onPress={() => undefined} />
     </Appbar.Header>
   );
 };

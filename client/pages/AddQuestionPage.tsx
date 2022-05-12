@@ -1,12 +1,6 @@
 import React from "react";
 import { StyleSheet, View, SafeAreaView } from "react-native";
-import {
-  Button,
-  TextInput,
-  Chip,
-  Subheading,
-  Appbar,
-} from "react-native-paper";
+import { Button, TextInput, Chip, Subheading } from "react-native-paper";
 import { MaterialBottomTabScreenProps } from "@react-navigation/material-bottom-tabs";
 import {
   createNativeStackNavigator,
