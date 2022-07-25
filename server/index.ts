@@ -7,6 +7,7 @@ import { config } from "dotenv";
 import checkAuth from "./middleware/check-auth";
 import users from "./routes/users";
 import answers from "./routes/answers";
+import post from './routes/post';
 
 interface TypedRequestBody<T> extends Express.Request {
   body: T;
@@ -39,6 +40,9 @@ async function main() {
 
   // Answers
   app.use("/answers", answers);
+
+  // Post question and answer
+  app.use('/post', post);
 
   // Questions
 
@@ -89,9 +93,9 @@ async function main() {
         question
           ? res.json(question)
           : res.status(400).json({
-              message: "400 Bad Request",
-              details: { id: "This question does not exist" },
-            });
+            message: "400 Bad Request",
+            details: { id: "This question does not exist" },
+          });
       } catch (error) {
         res.status(500).json({
           message: "Internal Server Error",
@@ -185,9 +189,9 @@ app.get(
       category
         ? res.json(category)
         : res.status(400).json({
-            message: "400 Bad Request",
-            details: { id: "This category does not exist" },
-          });
+          message: "400 Bad Request",
+          details: { id: "This category does not exist" },
+        });
     } catch (error) {
       console.error(error);
       res.status(422).json({ message: "Unprocessable Entity", details: {} });
