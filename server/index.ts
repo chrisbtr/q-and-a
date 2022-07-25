@@ -7,7 +7,7 @@ import { config } from "dotenv";
 import checkAuth from "./middleware/check-auth";
 import users from "./routes/users";
 import answers from "./routes/answers";
-import post from './routes/post';
+import post from "./routes/post";
 
 interface TypedRequestBody<T> extends Express.Request {
   body: T;
@@ -42,14 +42,14 @@ async function main() {
   app.use("/answers", answers);
 
   // Post question and answer
-  app.use('/post', post);
+  app.use("/post", post);
 
   // Questions
 
   app.get(
     "/questions",
     /**
-     * GET all `questions`
+     * GET all `questions` that have been answered
      *
      * @param req.body.categoryCode `categoryCode` can be pass into the the request body to only
      *    get the `questions` for that category
@@ -60,11 +60,15 @@ async function main() {
 
         const allQuestions = await prisma.questions.findMany({
           where: categoryCode
-            ? { categoryCode: String(categoryCode) }
-            : undefined,
+            ? {
+                categoryCode: String(categoryCode),
+                AND: { isAnswered: { equals: true } },
+              }
+            : { isAnswered: { equals: true } },
 
           take: Number(take),
           skip: Number(skip),
+          include: { answers: true },
         });
         res.json(allQuestions);
       } catch (error) {
@@ -93,9 +97,9 @@ async function main() {
         question
           ? res.json(question)
           : res.status(400).json({
-            message: "400 Bad Request",
-            details: { id: "This question does not exist" },
-          });
+              message: "400 Bad Request",
+              details: { id: "This question does not exist" },
+            });
       } catch (error) {
         res.status(500).json({
           message: "Internal Server Error",
@@ -189,9 +193,9 @@ app.get(
       category
         ? res.json(category)
         : res.status(400).json({
-          message: "400 Bad Request",
-          details: { id: "This category does not exist" },
-        });
+            message: "400 Bad Request",
+            details: { id: "This category does not exist" },
+          });
     } catch (error) {
       console.error(error);
       res.status(422).json({ message: "Unprocessable Entity", details: {} });

@@ -105,14 +105,14 @@ export const HomePage: React.FC<HomePageProps> = ({ navigation }) => {
           <ScrollView horizontal>
             <View style={{ flex: 1, flexDirection: "row" }}>
               {questions.map(
-                ({ id, subject, categoryCode, content, answer }) => (
+                ({ id, subject, categoryCode, content, answers }) => (
                   <QuestionCard
                     key={id}
                     id={id}
                     subject={subject}
                     category={getCategoryName(categoryCode) || ""}
                     question={content}
-                    answer={answer}
+                    answers={answers}
                     onPress={onPressHandler}
                   />
                 )
@@ -144,7 +144,7 @@ export const HomePage: React.FC<HomePageProps> = ({ navigation }) => {
               subject={selectedQuestion.subject || ""}
               category={getCategoryName(selectedQuestion.categoryCode) || ""}
               question={selectedQuestion.content}
-              answer={selectedQuestion.answer || ""}
+              answers={selectedQuestion.answers}
               ModalProps={{
                 visible: isModalOpen,
                 onDismiss: () => setIsModalOpen(false),

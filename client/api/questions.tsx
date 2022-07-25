@@ -1,12 +1,21 @@
 import entryPoint from "./entryPoint";
 
+export type Answer = {
+  id: number,
+  userId: number,
+  questionId: number,
+  content: string,
+  createdAt: Date,
+  editedAt?: Date,
+}
+
 export type Question = {
   id: number;
   title: string;
   categoryCode: string;
   content: string;
   subject?: string;
-  answer?: string;
+  answers: Answer[];
 };
 
 type QuestionResponseData = {

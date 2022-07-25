@@ -20,14 +20,14 @@ const AllQuestionsPage: React.FC<
 
   return (
     <ScrollView>
-      {questions.map(({ id, subject, categoryCode, content, answer }) => (
+      {questions.map(({ id, subject, categoryCode, content, answers }) => (
         <QuestionCard
           key={id}
           id={id}
           subject={subject}
           category={getCategoryName(categoryCode) || ""}
           question={content}
-          answer={answer}
+          answers={answers}
         />
       ))}
     </ScrollView>

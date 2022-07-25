@@ -1,13 +1,14 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Card, Title, Paragraph } from "react-native-paper";
+import { Answer } from '../api/questions';
 
 interface QuestionCardProps {
   id: React.Key;
   subject?: string;
   category?: string;
   question?: string;
-  answer?: string;
+  answers?: Answer[];
   onPress?: (cardId: string) => void;
   CardProps?: React.ComponentProps<typeof Card>;
 }
@@ -17,13 +18,16 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   subject = "",
   category = "Other",
   question = "",
-  answer = "",
+  answers = [],
   onPress,
   CardProps = {},
 }) => {
+  const answer = answers[0]?.content || '';
+
   const onPressHandler = () => {
     onPress?.(String(id));
   };
+
   return (
     <Card
       style={styles.card}

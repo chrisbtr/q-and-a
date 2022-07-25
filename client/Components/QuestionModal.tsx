@@ -2,11 +2,13 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Modal, Paragraph, Title } from "react-native-paper";
 
+import { Answer } from '../api/questions';
+
 interface QuestionModalProps {
   subject: string;
   category: string;
   question: string;
-  answer: string;
+  answers: Answer[];
   ModalProps: Omit<React.ComponentProps<typeof Modal>, 'children'>;
 }
 
@@ -14,9 +16,11 @@ const QuestionModal: React.FC<QuestionModalProps> = ({
   subject,
   category,
   question,
-  answer,
+  answers,
   ModalProps,
 }) => {
+  const answer = answers[0]?.content || '';
+
   return (
     <Modal contentContainerStyle={styles.modal} {...ModalProps}>
       <Title>Question</Title>

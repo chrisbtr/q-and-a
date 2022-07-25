@@ -30,7 +30,7 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ navigation }) => {
               key={`${category.code}_${question.id}`}
               category={category.name}
               subject={question.subject}
-              answer={question.answer}
+              answers={question.answers}
               question={question.content}
             />
           ))
