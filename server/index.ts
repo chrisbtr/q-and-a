@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from "express";
-import { body, validationResult } from "express-validator";
+import { body, query, validationResult } from "express-validator";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import { config } from "dotenv";
@@ -48,28 +48,51 @@ async function main() {
 
   app.get(
     "/questions",
+    query("take").optional().isNumeric({ no_symbols: true }),
+    query("skip").optional().isNumeric({ no_symbols: true }),
+    query("categoryCode").optional().isString(),
+    query("searchBy").optional().isString(),
     /**
      * GET all `questions` that have been answered
      *
-     * @param req.body.categoryCode `categoryCode` can be pass into the the request body to only
+     * @param req.query.categoryCode `categoryCode` can be pass into the the request body to only
      *    get the `questions` for that category
+     * @param req.query.take The max amount of questions send back
+     * @param req.query.skip The amount of questions to skip
+     * @param req.query.searchBy The text to filter the title of the found questions by
      */
     async (req, res) => {
       try {
-        const { categoryCode, take = 30, skip = 0 } = req.query;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+
+        // TODO: This throws a typescript error because of the express-validator 'query' hook
+        // temp fix is to cast req.query to an any type. Find a better fix.
+        const {
+          categoryCode,
+          take = 30,
+          skip = 0,
+          searchBy,
+        } = req.query as any;
 
         const allQuestions = await prisma.questions.findMany({
-          where: categoryCode
-            ? {
-                categoryCode: String(categoryCode),
-                AND: { isAnswered: { equals: true } },
-              }
-            : { isAnswered: { equals: true } },
-
+          where: {
+            categoryCode: categoryCode,
+            AND: {
+              isAnswered: { equals: true },
+              OR: [
+                { title: { contains: searchBy, mode: "insensitive" } },
+                { content: { contains: searchBy, mode: "insensitive" } },
+              ],
+            },
+          },
           take: Number(take),
           skip: Number(skip),
           include: { answers: true },
         });
+
         res.json(allQuestions);
       } catch (error) {
         console.error(error);
