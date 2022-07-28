@@ -1,8 +1,10 @@
 import express, { Request, Response } from "express";
-import { body, validationResult } from "express-validator";
+import { body } from "express-validator";
 import { PrismaClient } from "@prisma/client";
 import { sign } from "jsonwebtoken";
 import { hash, compare } from "bcrypt";
+
+import validateRequest from "../middleware/validate-request";
 
 const prisma = new PrismaClient();
 
@@ -15,12 +17,9 @@ router
     body("lastName").isString(),
     body("email").isEmail().normalizeEmail(),
     body("password").isLength({ min: 8 }),
+    validateRequest,
     async (req: Request, res: Response) => {
       try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-          return res.status(400).json({ errors: errors.array() });
-        }
         const { firstName, lastName, email, password } = req.body;
         try {
           const existingUser = await prisma.user.findUnique({
@@ -46,13 +45,10 @@ router.post(
   "/login",
   body("email").isEmail().normalizeEmail(),
   body("password").isString(),
+  validateRequest,
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
       const user = await prisma.user.findUnique({ where: { email } });
       console.log(user);
       if (!user) {

@@ -1,8 +1,9 @@
 import express, { Request, Response } from "express";
-import { body, validationResult } from "express-validator";
+import { body } from "express-validator";
 import { PrismaClient } from "@prisma/client";
 
 import checkAuth from "../middleware/check-auth";
+import validateRequest from "../middleware/validate-request";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -15,7 +16,7 @@ router.route("/").post(
   body("subject").isString(),
   body("answerContent").isString(),
   body("questionContent").isString(),
-
+  validateRequest,
   /**
    * POST a new question and an answer to the question
    *
@@ -27,11 +28,6 @@ router.route("/").post(
    */
   async (req: Request, res: Response) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-
       const {
         title,
         subject,

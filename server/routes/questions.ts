@@ -1,6 +1,8 @@
 import express from "express";
-import { query, validationResult } from "express-validator";
+import { query } from "express-validator";
 import { PrismaClient } from "@prisma/client";
+
+import validateRequest from "../middleware/validate-request";
 
 const prisma = new PrismaClient();
 
@@ -12,6 +14,7 @@ router.route("/").get(
   query("skip").optional().isNumeric({ no_symbols: true }),
   query("categoryCode").optional().isString(),
   query("searchBy").optional().isString(),
+  validateRequest,
   /**
    * GET all `questions` that have been answered
    *
@@ -23,11 +26,6 @@ router.route("/").get(
    */
   async (req, res) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-
       const { id, categoryCode, take = 30, skip = 0, searchBy } = req.query;
 
       const allQuestions = await prisma.questions.findMany({

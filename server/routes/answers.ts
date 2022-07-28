@@ -1,8 +1,9 @@
 import express, { Request, Response } from "express";
-import { body, validationResult } from "express-validator";
+import { body } from "express-validator";
 import { PrismaClient } from "@prisma/client";
 
 import checkAuth from "../middleware/check-auth";
+import validateRequest from "../middleware/validate-request";
 
 const prisma = new PrismaClient();
 
@@ -15,13 +16,9 @@ router
     body("userData").exists({ checkFalsy: true }),
     body("questionId").isNumeric(),
     body("content").isString(),
+    validateRequest,
     async (req: Request, res: Response) => {
       try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-          return res.status(400).json({ errors: errors.array() });
-        }
-
         const { userData, questionId, content } = req.body;
         const date = new Date();
 
