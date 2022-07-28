@@ -1,8 +1,6 @@
-import express, { Request, Response } from "express";
-import { body, query, validationResult } from "express-validator";
+import express from "express";
+import { query, validationResult } from "express-validator";
 import { PrismaClient } from "@prisma/client";
-
-import checkAuth from "../middleware/check-auth";
 
 const prisma = new PrismaClient();
 
@@ -30,26 +28,25 @@ router.route("/").get(
         return res.status(400).json({ errors: errors.array() });
       }
 
-      // TODO: This throws a typescript error because of the express-validator 'query' hook
-      // temp fix is to cast req.query to an any type. Find a better fix.
-      const {
-        id,
-        categoryCode,
-        take = 30,
-        skip = 0,
-        searchBy,
-      } = req.query as any;
+      const { id, categoryCode, take = 30, skip = 0, searchBy } = req.query;
 
       const allQuestions = await prisma.questions.findMany({
         where: {
           id: { equals: Number(id) || undefined },
           AND: {
-            categoryCode: categoryCode,
+            categoryCode: categoryCode as string,
             AND: {
               isAnswered: { equals: true },
               OR: [
-                { title: { contains: searchBy, mode: "insensitive" } },
-                { content: { contains: searchBy, mode: "insensitive" } },
+                {
+                  title: { contains: searchBy as string, mode: "insensitive" },
+                },
+                {
+                  content: {
+                    contains: searchBy as string,
+                    mode: "insensitive",
+                  },
+                },
               ],
             },
           },
@@ -67,7 +64,7 @@ router.route("/").get(
   }
 );
 
-// TODO: Uncomment this out and fix if posting questions without answers is ever needed. 
+// TODO: Uncomment this out and fix if posting questions without answers is ever needed.
 // app.post(
 //   "/questions",
 //   checkAuth,
