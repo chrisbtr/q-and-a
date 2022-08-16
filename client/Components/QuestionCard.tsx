@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Card, Title, Paragraph } from "react-native-paper";
+import { Card, Paragraph } from "react-native-paper";
 import { Answer } from '../api/questions';
 
 interface QuestionCardProps {
@@ -38,19 +38,10 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
       <Card.Title
         title={subject}
         subtitle={category}
-        titleStyle={styles.title}
-        subtitleStyle={styles.title}
       />
       <Card.Content>
-        <Title>Question</Title>
-        <Paragraph style={styles.paragraph} numberOfLines={4}>
+        <Paragraph numberOfLines={3}>
           {question}
-        </Paragraph>
-      </Card.Content>
-      <Card.Content>
-        <Title>Answer</Title>
-        <Paragraph style={styles.paragraph} numberOfLines={4}>
-          {answer}
         </Paragraph>
       </Card.Content>
     </Card>
@@ -60,19 +51,13 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 const styles = StyleSheet.create({
   card: {
     alignSelf: "center",
-    borderRadius: 20,
+    borderRadius: 4,
     marginTop: 12,
-    marginBottom: 24,
     marginLeft: 12,
     marginRight: 12,
-    height: 200,
-    width: 300,
-  },
-  title: {
-    textAlign: "center",
-  },
-  paragraph: {
-    marginLeft: 10,
+    maxHeight: 150,
+    width: '95%',
+    overflow: 'hidden'
   },
 });
 

@@ -102,8 +102,8 @@ export const HomePage: React.FC<HomePageProps> = ({ navigation }) => {
       <View>
         <ScrollView>
           <Subheading style={styles.subheading}>New Questions</Subheading>
-          <ScrollView horizontal>
-            <View style={{ flex: 1, flexDirection: "row" }}>
+          <ScrollView>
+            <View>
               {questions.map(
                 ({ id, subject, categoryCode, content, answers }) => (
                   <QuestionCard
