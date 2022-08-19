@@ -1,23 +1,117 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SafeAreaView, StyleSheet, ActivityIndicator } from "react-native";
-import { Appbar, IconButton, Button, Subheading } from "react-native-paper";
+import { Appbar, IconButton, Button, Subheading, useTheme } from "react-native-paper";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { NavigatorScreenParams } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { RootState } from "../store";
 import { fetchAllCategories, reset } from "../features/categoriesSlice";
 import AllCategoriesPage from "./AllCategoriesPage";
 import HomePage from "./HomePage";
-import AddQuestionModal from "./AddQuestionPage";
+import { Category } from "../api/categories";
+import { Question } from "../api/questions";
+import AllQuestionsPage from "./AllQuestionsPage";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import StackHeader from "../Components/StackHeader";
+import CategoryPage from "./CategoryPage";
+import QuestionPage from "./QuestionPage";
+
+export type HomeStackParamList = {
+  HomePage: undefined;
+  AllQuestions: undefined;
+  Category: {
+    category: Category;
+  };
+
+}
+
+export type AllCategoriesStackParamList = {
+  Categories: undefined;
+  Category: {
+    category: Category;
+  };
+};
+
+export type AllQuestionsStackParamList = {
+  Questions: undefined;
+  Question: {
+    question: Question;
+  };
+};
 
 export type MainTabsParamList = {
-  Home: undefined;
+  Home: NavigatorScreenParams<HomeStackParamList>;
   AddQuestion: undefined;
-  AllCategories: undefined;
+  AllCategories: NavigatorScreenParams<AllCategoriesStackParamList>;
+  AllQuestions: NavigatorScreenParams<AllQuestionsStackParamList>;
 };
 
 const Tab = createMaterialBottomTabNavigator<MainTabsParamList>();
+const HomeStack = createNativeStackNavigator<HomeStackParamList>();
+const AllCategoriesStack = createNativeStackNavigator<AllCategoriesStackParamList>();
+const AllQuestionsStack = createNativeStackNavigator<AllQuestionsStackParamList>();
+
+const AllQuestionsPageStack: React.FC = () => {
+  const theme = useTheme();
+
+  return (
+    <AllQuestionsStack.Navigator initialRouteName="Questions" screenOptions={{
+      headerBackTitle: "Back",
+      headerStyle: { backgroundColor: theme.colors.primary },
+      headerTitleStyle: { ...theme.fonts.medium },
+      headerTintColor: theme.colors.background,
+    }}>
+      <AllQuestionsStack.Screen name='Questions' component={AllQuestionsPage} />
+      <AllQuestionsStack.Screen name='Question' component={QuestionPage} />
+    </AllQuestionsStack.Navigator>
+  );
+};
+
+const HomePageStack: React.FC = () => {
+  return (
+    <HomeStack.Navigator
+      initialRouteName="HomePage"
+      screenOptions={{ header: (props) => <StackHeader {...props} /> }}
+    >
+      <HomeStack.Screen
+        name="HomePage"
+        options={{
+          title: "Home",
+        }}
+        component={HomePage}
+      />
+    </HomeStack.Navigator>
+  );
+};
+
+const AllCategoriesPageStack: React.FC<AllCategoriesStackParamList> = () => {
+  const theme = useTheme();
+
+  return (
+    <AllCategoriesStack.Navigator
+      initialRouteName="Categories"
+      screenOptions={{
+        headerBackTitle: "Back",
+        headerStyle: { backgroundColor: theme.colors.primary },
+        headerTitleStyle: { ...theme.fonts.medium },
+        headerTintColor: theme.colors.background,
+        header: (props) => <StackHeader {...props} />,
+      }}
+    >
+      <AllCategoriesStack.Screen
+        name="Categories"
+        component={AllCategoriesPage}
+        options={{
+          title: "Categories",
+          //header: (props) => <StackHeader {...props} />,
+        }}
+      />
+      <AllCategoriesStack.Screen name="Category" component={CategoryPage} />
+    </AllCategoriesStack.Navigator>
+  );
+};
 
 const Main: React.FC = () => {
   const dispatch = useDispatch();
@@ -60,14 +154,15 @@ const Main: React.FC = () => {
         <Tab.Navigator initialRouteName="Home" shifting>
           <Tab.Screen
             name="Home"
-            component={HomePage}
+            component={HomePageStack}
             options={{
+              title: "Home",
               tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons name="home" color={color} size={26} />
               ),
             }}
           />
-          <Tab.Screen
+          {/* <Tab.Screen
             name="AddQuestion"
             component={AddQuestionModal}
             options={{
@@ -80,12 +175,22 @@ const Main: React.FC = () => {
                 />
               ),
             }}
+          /> */}
+          <Tab.Screen
+            name="AllQuestions"
+            component={AllQuestionsPageStack}
+            options={{
+              title: "Questions",
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="magnify" color={color} size={26} />
+              ),
+            }}
           />
           <Tab.Screen
             name="AllCategories"
-            component={AllCategoriesPage}
+            component={AllCategoriesPageStack}
             options={{
-              title: "All Categories",
+              title: "Categories",
               tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons name="menu" color={color} size={26} />
               ),

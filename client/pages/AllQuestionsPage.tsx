@@ -4,12 +4,10 @@ import { useSelector } from "react-redux";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { RootState } from "../store";
-import { HomePageStackParamList } from "./HomePage";
+import { MainTabsParamList } from "./main";
 import QuestionCard from "../Components/QuestionCard";
 
-const AllQuestionsPage: React.FC<
-  NativeStackScreenProps<HomePageStackParamList, "AllQuestions">
-> = () => {
+const AllQuestionsPage: React.FC<NativeStackScreenProps<MainTabsParamList, "AllQuestions">> = ({ navigation }) => {
   const { questions, categories } = useSelector((state: RootState) => ({
     questions: state.questions.questions,
     categories: state.categories.categories,
@@ -20,14 +18,17 @@ const AllQuestionsPage: React.FC<
 
   return (
     <ScrollView>
-      {questions.map(({ id, subject, categoryCode, content, answers }) => (
+      {questions.map(question => (
         <QuestionCard
-          key={id}
-          id={id}
-          subject={subject}
-          category={getCategoryName(categoryCode) || ""}
-          question={content}
-          answers={answers}
+          key={question.id}
+          id={question.id}
+          subject={question.subject}
+          category={getCategoryName(question.categoryCode) || ""}
+          question={question.content}
+          answers={question.answers}
+          onPress={() => {
+            navigation.navigate('AllQuestions', { screen: 'Question', params: { question } })
+          }}
         />
       ))}
     </ScrollView>

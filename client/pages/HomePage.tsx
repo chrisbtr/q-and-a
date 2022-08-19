@@ -1,73 +1,19 @@
 import React from "react";
 import { StyleSheet, SafeAreaView, ScrollView, View } from "react-native";
-import { Portal, Subheading, Button } from "react-native-paper";
+import {  Subheading, Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { MaterialBottomTabScreenProps } from "@react-navigation/material-bottom-tabs";
-import {
-  createNativeStackNavigator,
-  NativeStackScreenProps,
-} from "@react-navigation/native-stack";
+import {NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { RootState } from "../store";
 import { MainTabsParamList } from "./Main";
 import { fetchAllQuestions } from "../features/questionsSlice";
-import { Category } from "../api/categories";
-import CategoryPage from "./CategoryPage";
-import AllQuestionsPage from "./AllQuestionsPage";
-import StackHeader from "../Components/StackHeader";
 import QuestionCard from "../Components/QuestionCard";
-import QuestionModal from "../Components/QuestionModal";
 import CategoryCard from "../Components/CategoryCard";
 
-export type HomePageStackParamList = {
-  HomePage: undefined;
-  AllQuestions: undefined;
-  Category: {
-    category: Category;
-  };
-};
-
-export type HomePageStackProps = MaterialBottomTabScreenProps<
+export type HomePageProps = NativeStackScreenProps<
   MainTabsParamList,
   "Home"
 >;
-
-export type HomePageProps = NativeStackScreenProps<
-  HomePageStackParamList,
-  "HomePage"
->;
-
-const Stack = createNativeStackNavigator<HomePageStackParamList>();
-
-const HomePageStack: React.FC<HomePageStackProps> = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{ header: (props) => <StackHeader {...props} /> }}
-    >
-      <Stack.Screen
-        name="HomePage"
-        options={{
-          title: "Home",
-        }}
-        component={HomePage}
-      ></Stack.Screen>
-      <Stack.Screen
-        name="Category"
-        options={({ route }) => ({
-          title: route.params.category.name,
-        })}
-        component={CategoryPage}
-      />
-      <Stack.Screen
-        name="AllQuestions"
-        options={{
-          title: "All Questions",
-        }}
-        component={AllQuestionsPage}
-      ></Stack.Screen>
-    </Stack.Navigator>
-  );
-};
 
 export const HomePage: React.FC<HomePageProps> = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -79,18 +25,6 @@ export const HomePage: React.FC<HomePageProps> = ({ navigation }) => {
 
   const getCategoryName = (categoryCode: string) =>
     categories.find((category) => category.code === categoryCode)?.name;
-
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [selectedQuestionId, setSelectedQuestionId] = React.useState("");
-
-  const selectedQuestion = questions.find(
-    (question) => String(question.id) === selectedQuestionId
-  );
-
-  const onPressHandler = (cardId: string) => {
-    setIsModalOpen(true);
-    setSelectedQuestionId(cardId);
-  };
 
   React.useEffect(() => {
     // TODO: Make this fetch the questions by date
@@ -104,23 +38,22 @@ export const HomePage: React.FC<HomePageProps> = ({ navigation }) => {
           <Subheading style={styles.subheading}>New Questions</Subheading>
           <ScrollView>
             <View>
-              {questions.map(
-                ({ id, subject, categoryCode, content, answers }) => (
-                  <QuestionCard
-                    key={id}
-                    id={id}
-                    subject={subject}
-                    category={getCategoryName(categoryCode) || ""}
-                    question={content}
-                    answers={answers}
-                    onPress={onPressHandler}
-                  />
-                )
+              {questions.map(question => (
+                <QuestionCard
+                  key={question.id}
+                  id={question.id}
+                  subject={question.subject}
+                  category={getCategoryName(question.categoryCode) || ""}
+                  question={question.content}
+                  answers={question.answers}
+                  onPress={() => navigation.navigate('AllQuestions', { screen: 'Question', params: { question } })}
+                />
+              )
               )}
             </View>
             <Button
               style={{ alignSelf: "center" }}
-              onPress={() => navigation.navigate("AllQuestions")}
+              onPress={() => navigation.navigate("AllQuestions", { screen: 'Questions' })}
             >
               View More
             </Button>
@@ -133,25 +66,11 @@ export const HomePage: React.FC<HomePageProps> = ({ navigation }) => {
               key={`home_page_category_${category.code}`}
               source={{ uri: "https://picsum.photos/700" }}
               viewCategoryHandler={() => {
-                navigation.navigate("Category", { category });
+                navigation.navigate('AllCategories', { screen: 'Category', params: { category } })
               }}
             />
           ))}
         </ScrollView>
-        {selectedQuestion ? (
-          <Portal>
-            <QuestionModal
-              subject={selectedQuestion.subject || ""}
-              category={getCategoryName(selectedQuestion.categoryCode) || ""}
-              question={selectedQuestion.content}
-              answers={selectedQuestion.answers}
-              ModalProps={{
-                visible: isModalOpen,
-                onDismiss: () => setIsModalOpen(false),
-              }}
-            />
-          </Portal>
-        ) : null}
       </View>
     </SafeAreaView>
   );
@@ -176,4 +95,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomePageStack;
+export default HomePage;

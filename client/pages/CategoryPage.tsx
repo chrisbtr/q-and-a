@@ -4,16 +4,16 @@ import { Subheading, Button } from "react-native-paper";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-import { AllCategoriesParamList } from "./AllCategoriesPage";
+import { AllCategoriesStackParamList } from "./Main";
 import QuestionCard from "../Components/QuestionCard";
 
 export type CategoryPageProps = NativeStackScreenProps<
-  AllCategoriesParamList,
+  AllCategoriesStackParamList,
   "Category"
 >;
 
 const CategoryPage: React.FC<CategoryPageProps> = ({ navigation }) => {
-  const route = useRoute<RouteProp<AllCategoriesParamList, "Category">>();
+  const route = useRoute<RouteProp<AllCategoriesStackParamList, "Category">>();
   const { category } = route.params;
 
   React.useEffect(() => {
