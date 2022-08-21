@@ -21,7 +21,7 @@ model Answers {
   id         Int       @id @default(autoincrement())
   userId     Int
   questionId Int
-  content    String    @db.VarChar(255)
+  content    String    @db.Text
   createdAt  DateTime
   editedAt   DateTime?
   user       User      @relation(fields: [userId], references: [id])
@@ -30,8 +30,8 @@ model Answers {
 
 model Categories {
   code        String      @id @db.VarChar(100)
-  name        String      @db.VarChar(50)
-  description String?     @db.VarChar(255)
+  name        String      @db.VarChar(255)
+  description String?     @db.VarChar(500)
   questions   Questions[]
 }
 
@@ -40,9 +40,9 @@ model Questions {
   userId       Int
   categoryCode String     @db.VarChar(100)
   isAnswered   Boolean
-  title        String     @db.VarChar(20)
-  subject      String?    @default("") @db.VarChar(100)
-  content      String     @db.VarChar(255)
+  title        String     @db.VarChar(300)
+  subject      String?    @default("") @db.VarChar(300)
+  content      String     @db.Text
   createdAt    DateTime
   editedAt     DateTime?
   user         User       @relation(fields: [userId], references: [id])
