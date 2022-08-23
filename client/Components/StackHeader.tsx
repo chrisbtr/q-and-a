@@ -1,19 +1,18 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Appbar, Avatar, Searchbar } from "react-native-paper";
+import { Appbar, Searchbar } from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
+import theme from "../theme";
 
 export interface StackHeaderProps extends NativeStackHeaderProps {
   showSearch?: boolean;
 }
 
 const StackHeader: React.FC<StackHeaderProps> = ({
-  showSearch = true,
-  options,
   navigation,
 }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [searching, setSearching] = React.useState(false);
+
   const hasBackButton = navigation.canGoBack();
 
   return (
@@ -21,43 +20,26 @@ const StackHeader: React.FC<StackHeaderProps> = ({
       {hasBackButton ? (
         <Appbar.BackAction onPress={() => navigation.goBack()} />
       ) : null}
-      <Appbar.Content title={options.title} />
-      {showSearch ? (
-        !searching ? (
-          <Appbar.Action
-            icon="magnify"
-            onPress={() => {
-              setSearching(true);
-            }}
-          />
-        ) : (
-          <Searchbar
-            autoFocus
-            style={styles.searchBar}
-            value={searchQuery}
-            placeholder="Search"
-            onChangeText={(text) => setSearchQuery(text)}
-            onSubmitEditing={() => setSearching(false)}
-            onEndEditing={() => setSearching(false)}
-          />
-        )
-      ) : null}
-      <Avatar.Text
-        label="CB"
-        size={32}
-        style={{ backgroundColor: "gray" }}
-        color="white"
+      <Searchbar
+        style={styles.searchBar}
+        value={searchQuery}
+        placeholder="Search"
+        onChangeText={(text) => setSearchQuery(text)}
+        onSubmitEditing={() => {
+          navigation.push('Search', { query: searchQuery })
+        }}
       />
-      <Appbar.Action icon="dots-horizontal" onPress={() => undefined} />
     </Appbar.Header>
   );
 };
 
 const styles = StyleSheet.create({
   searchBar: {
-    marginRight: 8,
-    width: "75%",
-    height: "70%",
+    marginLeft: 12,
+    width: "80%",
+    height: "55%",
+    shadowOpacity: 0,
+    backgroundColor: theme.colors.background,
   },
 });
 
