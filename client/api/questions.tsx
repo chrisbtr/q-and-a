@@ -43,9 +43,9 @@ type GetAllQuestionData = {
 export const questionsApi = {
   get: (id: string) => entryPoint.get<QuestionResponseData>(`/questions/${id}`),
 
-  getAll: ({ categoryCode }: GetAllQuestionData = {}) =>
+  getAll: ({ categoryCode, query }: GetAllQuestionData = {}) =>
     entryPoint.get<QuestionResponseData[]>("/questions", {
-      params: { categoryCode },
+      params: { categoryCode, searchBy: query },
     }),
 
   create: ({ title, categoryCode, content, subject }: CreateQuestionData) =>
