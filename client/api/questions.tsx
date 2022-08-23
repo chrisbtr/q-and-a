@@ -25,6 +25,7 @@ type QuestionResponseData = {
   isAnswered: boolean;
   content: string;
   subject?: string;
+  answers: Answer[];
 };
 
 type CreateQuestionData = {
@@ -36,6 +37,7 @@ type CreateQuestionData = {
 
 type GetAllQuestionData = {
   categoryCode?: string;
+  query?: string;
 };
 
 export const questionsApi = {
