@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleSheet, SafeAreaView, ScrollView, View } from "react-native";
-import {  Subheading, Button } from "react-native-paper";
+import { Subheading, Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import {NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { RootState } from "../store";
 import { MainTabsParamList } from "./Main";
@@ -46,7 +46,7 @@ export const HomePage: React.FC<HomePageProps> = ({ navigation }) => {
                   category={getCategoryName(question.categoryCode) || ""}
                   question={question.content}
                   answers={question.answers}
-                  onPress={() => navigation.navigate('AllQuestions', { screen: 'Question', params: { question } })}
+                  onPress={() => navigation.navigate('Home', { screen: 'Question', params: { question } })}
                 />
               )
               )}
