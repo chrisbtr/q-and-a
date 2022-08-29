@@ -26,7 +26,7 @@ router.route("/").get(
    */
   async (req, res) => {
     try {
-      const { id, categoryCode, take = 30, skip = 0, searchBy } = req.query;
+      const { id, categoryCode, take = 10, skip = 0, searchBy } = req.query;
 
       const count = await prisma.questions.count({ where: { isAnswered: { equals: true } } });
 
