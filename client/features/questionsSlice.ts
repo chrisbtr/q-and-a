@@ -7,7 +7,7 @@ export const fetchAllQuestions = createAsyncThunk(
   async () => {
     const response = await questionsApi.getAll();
     // TODO: Remove map when an API endpoint is made for question with answer
-    const questions = response.data.map((question) => ({
+    const questions = response.data.questions.map((question) => ({
       ...question,
       answer: "",
     }));
@@ -21,7 +21,7 @@ export const fetchQuestionsByCategory = createAsyncThunk(
   async (categoryCode: string) => {
     const response = await questionsApi.getAll({ categoryCode });
     // TODO: Remove map when an API endpoint is made for question with answer
-    const questions = response.data.map((question) => ({
+    const questions = response.data.questions.map((question) => ({
       ...question,
       answer: "",
     }));

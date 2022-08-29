@@ -28,6 +28,11 @@ type QuestionResponseData = {
   answers: Answer[];
 };
 
+type AllQuestionResponseData = {
+  allQuestionsCount: number;
+  questions: QuestionResponseData[];
+};
+
 type CreateQuestionData = {
   title: string;
   categoryCode: string;
@@ -38,14 +43,16 @@ type CreateQuestionData = {
 type GetAllQuestionData = {
   categoryCode?: string;
   query?: string;
+  take?: number;
+  skip?: number;
 };
 
 export const questionsApi = {
   get: (id: string) => entryPoint.get<QuestionResponseData>(`/questions/${id}`),
 
-  getAll: ({ categoryCode, query }: GetAllQuestionData = {}) =>
-    entryPoint.get<QuestionResponseData[]>("/questions", {
-      params: { categoryCode, searchBy: query },
+  getAll: ({ categoryCode, query, take, skip }: GetAllQuestionData = {}) =>
+    entryPoint.get<AllQuestionResponseData>("/questions", {
+      params: { categoryCode, searchBy: query, take, skip },
     }),
 
   create: ({ title, categoryCode, content, subject }: CreateQuestionData) =>

@@ -28,6 +28,8 @@ router.route("/").get(
     try {
       const { id, categoryCode, take = 30, skip = 0, searchBy } = req.query;
 
+      const count = await prisma.questions.count({ where: { isAnswered: { equals: true } } });
+
       const allQuestions = await prisma.questions.findMany({
         where: {
           id: { equals: Number(id) || undefined },
@@ -53,8 +55,8 @@ router.route("/").get(
         skip: Number(skip),
         include: { answers: true },
       });
-
-      res.json(allQuestions);
+      console.log(count);
+      res.json({ allQuestionsCount: count, questions: allQuestions});
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal Server Error", details: {} });

@@ -32,7 +32,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ navigation, route }) => {
   React.useEffect(() => {
     questionsApi.getAll({ query }).then(res => {
       if (res.status === 200) {
-        setQuestions(res.data);
+        setQuestions(res.data.questions);
         return;
       }
       setFailed(true);
