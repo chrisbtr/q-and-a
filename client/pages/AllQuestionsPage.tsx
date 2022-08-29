@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, FlatList, View } from "react-native";
 import { useSelector } from "react-redux";
+import { useScrollToTop } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ActivityIndicator } from "react-native-paper";
 
@@ -16,6 +17,9 @@ const AllQuestionsPage: React.FC<NativeStackScreenProps<MainTabsParamList, "AllQ
   const [allQuestionsCount, setAllQuestionsCount] = React.useState<number | null>(null);
   const [skipCount, setSkipCount] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(false);
+  const ref = React.useRef(null);
+
+  useScrollToTop(ref);
 
   const { categories } = useSelector((state: RootState) => ({
     categories: state.categories.categories,
@@ -52,7 +56,7 @@ const AllQuestionsPage: React.FC<NativeStackScreenProps<MainTabsParamList, "AllQ
       <QuestionCard
         key={item.id}
         id={item.id}
-        subject={item.title}
+        subject={item.subject}
         category={getCategoryName(item.categoryCode) || ""}
         question={item.content}
         answers={item.answers}
@@ -67,16 +71,14 @@ const AllQuestionsPage: React.FC<NativeStackScreenProps<MainTabsParamList, "AllQ
     getQuestions()
   }, [skipCount, allQuestionsCount]);
 
-
-
   const getCategoryName = (categoryCode: string) =>
     categories.find((category) => category.code === categoryCode)?.name;
 
   return (
     <FlatList
+      ref={ref}
       data={questions}
       renderItem={renderQuestion}
-
       ListFooterComponent={
         () => isLoading ?
           <View style={styles.loaderStyles}><ActivityIndicator /></View>

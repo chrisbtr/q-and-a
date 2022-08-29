@@ -1,7 +1,8 @@
 import React from "react";
-import { StyleSheet, SafeAreaView, ScrollView } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useSelector } from "react-redux";
+import { useScrollToTop } from "@react-navigation/native";
 
 import { RootState } from "../store";
 import { MainTabsParamList } from "./Main";
@@ -15,25 +16,26 @@ export type AllCategoriesPageProps = NativeStackScreenProps<
 const AllCategoriesPage: React.FC<AllCategoriesPageProps> = ({
   navigation,
 }) => {
+  const ref = React.useRef(null);
+
+  useScrollToTop(ref);
   const categories = useSelector(
     (state: RootState) => state.categories.categories
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
-        {categories.map((category, index) => (
-          <CategoryCard
-            key={index}
-            title={category.name}
-            source={{ uri: "https://picsum.photos/700" }}
-            viewCategoryHandler={() => {
-              navigation.navigate("AllCategories", { screen: 'Category', params: { category } });
-            }}
-          />
-        ))}
-      </ScrollView>
-    </SafeAreaView>
+    <ScrollView style={styles.container} ref={ref}>
+      {categories.map((category, index) => (
+        <CategoryCard
+          key={index}
+          title={category.name}
+          source={{ uri: "https://picsum.photos/700" }}
+          viewCategoryHandler={() => {
+            navigation.navigate("AllCategories", { screen: 'Category', params: { category } });
+          }}
+        />
+      ))}
+    </ScrollView>
   );
 };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, SafeAreaView, ScrollView, View } from "react-native";
+import { StyleSheet, ScrollView, View } from "react-native";
 import { Subheading, Button } from "react-native-paper";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -21,35 +21,33 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ navigation }) => {
   }, []);
 
   return (
-    <SafeAreaView>
-      <ScrollView>
-        {category.questions.length ? (
-          category.questions.map((question) => (
-            <QuestionCard
-              id={question.id}
-              key={`${category.code}_${question.id}`}
-              category={category.name}
-              subject={question.subject}
-              answers={question.answers}
-              question={question.content}
-            />
-          ))
-        ) : (
-          <View style={styles.noQuestions}>
-            <Subheading style={styles.subheading}>
-              No questions added yet
-            </Subheading>
-            <Button icon="plus-box-outline">Add a question</Button>
-            <Button
-              icon="keyboard-backspace"
-              onPress={() => navigation.goBack()}
-            >
-              Go Back
-            </Button>
-          </View>
-        )}
-      </ScrollView>
-    </SafeAreaView>
+    <ScrollView>
+      {category.questions.length ? (
+        category.questions.map((question) => (
+          <QuestionCard
+            id={question.id}
+            key={`${category.code}_${question.id}`}
+            category={category.name}
+            subject={question.subject}
+            answers={question.answers}
+            question={question.content}
+          />
+        ))
+      ) : (
+        <View style={styles.noQuestions}>
+          <Subheading style={styles.subheading}>
+            No questions added yet
+          </Subheading>
+          <Button icon="plus-box-outline">Add a question</Button>
+          <Button
+            icon="keyboard-backspace"
+            onPress={() => navigation.goBack()}
+          >
+            Go Back
+          </Button>
+        </View>
+      )}
+    </ScrollView>
   );
 };
 

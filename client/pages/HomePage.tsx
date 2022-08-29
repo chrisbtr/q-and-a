@@ -1,8 +1,9 @@
 import React from "react";
-import { StyleSheet, SafeAreaView, ScrollView, View } from "react-native";
+import { StyleSheet, ScrollView, View } from "react-native";
 import { Subheading, Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useScrollToTop } from "@react-navigation/native";
 
 import { RootState } from "../store";
 import { MainTabsParamList } from "./Main";
@@ -17,6 +18,9 @@ export type HomePageProps = NativeStackScreenProps<
 
 export const HomePage: React.FC<HomePageProps> = ({ navigation }) => {
   const dispatch = useDispatch();
+  const ref = React.useRef(null);
+
+  useScrollToTop(ref);
 
   const { questions, categories } = useSelector((state: RootState) => ({
     questions: state.questions.questions,
@@ -32,34 +36,10 @@ export const HomePage: React.FC<HomePageProps> = ({ navigation }) => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <ScrollView>
-          <Subheading style={styles.subheading}>New Questions</Subheading>
-          <ScrollView>
-            <View>
-              {questions.map(question => (
-                <QuestionCard
-                  key={question.id}
-                  id={question.id}
-                  subject={question.subject}
-                  category={getCategoryName(question.categoryCode) || ""}
-                  question={question.content}
-                  answers={question.answers}
-                  onPress={() => navigation.navigate('Home', { screen: 'Question', params: { question } })}
-                />
-              )
-              )}
-            </View>
-            <Button
-              style={{ alignSelf: "center" }}
-              onPress={() => navigation.navigate("AllQuestions", { screen: 'Questions' })}
-            >
-              View More
-            </Button>
-          </ScrollView>
-
-          <Subheading style={styles.subheading}>Categories</Subheading>
+    <View style={styles.container} >
+      <ScrollView ref={ref}>
+        <Subheading style={styles.subheading}>Categories</Subheading>
+        <ScrollView horizontal>
           {categories.map((category) => (
             <CategoryCard
               title={category.name}
@@ -71,8 +51,27 @@ export const HomePage: React.FC<HomePageProps> = ({ navigation }) => {
             />
           ))}
         </ScrollView>
-      </View>
-    </SafeAreaView>
+        <Subheading style={styles.subheading}>New Questions</Subheading>
+        {questions.map(question => (
+          <QuestionCard
+            key={question.id}
+            id={question.id}
+            subject={question.subject}
+            category={getCategoryName(question.categoryCode) || ""}
+            question={question.content}
+            answers={question.answers}
+            onPress={() => navigation.navigate('Home', { screen: 'Question', params: { question } })}
+          />
+        )
+        )}
+        <Button
+          style={{ alignSelf: "center" }}
+          onPress={() => navigation.navigate("AllQuestions", { screen: 'Questions' })}
+        >
+          View More
+        </Button>
+      </ScrollView>
+    </View>
   );
 };
 
