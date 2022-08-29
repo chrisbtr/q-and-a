@@ -50,14 +50,10 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    alignSelf: "center",
-    borderRadius: 4,
     marginTop: 12,
     marginLeft: 12,
     marginRight: 12,
     maxHeight: 150,
-    width: '95%',
-    overflow: 'hidden'
   },
 });
 
