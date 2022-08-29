@@ -212,7 +212,7 @@ const Main: React.FC = () => {
             options={{
               title: "Questions",
               tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="magnify" color={color} size={26} />
+                <MaterialCommunityIcons name="compass" color={color} size={26} />
               ),
             }}
           />
