@@ -85,6 +85,7 @@ router
               },
             },
           },
+          orderBy: { createdAt: "desc" },
           take: Number(take),
           skip: Number(skip),
           include: { answers: true },
