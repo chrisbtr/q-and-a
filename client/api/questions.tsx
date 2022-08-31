@@ -48,7 +48,7 @@ type GetAllQuestionData = {
 };
 
 export const questionsApi = {
-  get: (id: string) => entryPoint.get<QuestionResponseData>(`/questions/${id}`),
+  get: (id: number) => entryPoint.get<QuestionResponseData>(`/questions/${id}`),
 
   getAll: ({ categoryCode, query, take, skip }: GetAllQuestionData = {}) =>
     entryPoint.get<AllQuestionResponseData>("/questions", {

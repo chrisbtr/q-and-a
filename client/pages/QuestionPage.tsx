@@ -1,17 +1,35 @@
 import React from "react";
-import { StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView, RefreshControl } from "react-native";
 import { Paragraph, Title, Card } from "react-native-paper";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { AllQuestionsStackParamList } from "./Main";
+import questionsApi from "../api/questions";
 
 type QuestionPageProps = NativeStackScreenProps<AllQuestionsStackParamList, 'Question'>
 
 const QuestionPage: React.FC<QuestionPageProps> = ({ route }) => {
-  const question = route.params.question;
+  const [question, setQuestion] = React.useState(route.params.question);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const handleRefresh = React.useCallback(() => {
+    setRefreshing(true);
+
+    questionsApi.get(question.id)
+      .then(res => {
+        setQuestion(res.data)
+      }
+      ).finally(() => {
+        setRefreshing(false)
+      });
+  }, []);
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+      }
+    >
       <Card style={styles.card} mode="outlined">
         <Card.Title title={question.subject} subtitle={question.categoryCode} titleNumberOfLines={10} />
         <Card.Content>
