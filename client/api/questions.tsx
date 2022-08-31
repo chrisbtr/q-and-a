@@ -16,6 +16,7 @@ export type Question = {
   content: string;
   subject?: string;
   answers: Answer[];
+  createdAt: string;
 };
 
 type QuestionResponseData = {
@@ -26,6 +27,7 @@ type QuestionResponseData = {
   content: string;
   subject?: string;
   answers: Answer[];
+  createdAt: string;
 };
 
 type AllQuestionResponseData = {
