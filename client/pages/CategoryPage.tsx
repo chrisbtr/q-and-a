@@ -31,6 +31,7 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ navigation }) => {
             subject={question.subject}
             answers={question.answers}
             question={question.content}
+            onPress={() => navigation.navigate('Question', { question })}
           />
         ))
       ) : (

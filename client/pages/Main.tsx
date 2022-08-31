@@ -38,6 +38,9 @@ export type AllCategoriesStackParamList = {
   Category: {
     category: Category;
   };
+  Question: {
+    question: Question;
+  };
 };
 
 export type AllQuestionsStackParamList = {
@@ -148,7 +151,22 @@ const AllCategoriesPageStack: React.FC<AllCategoriesStackParamList> = () => {
           //header: (props) => <StackHeader {...props} />,
         }}
       />
-      <AllCategoriesStack.Screen name="Category" component={CategoryPage} />
+      <AllCategoriesStack.Screen
+        name="Category"
+        options={{
+          title: "Category",
+          headerTitle: '',
+        }}
+        component={CategoryPage}
+      />
+      <AllCategoriesStack.Screen
+        name='Question'
+        options={{
+          title: "Question",
+          headerTitle: '',
+        }}
+        component={QuestionPage}
+      />
     </AllCategoriesStack.Navigator>
   );
 };
