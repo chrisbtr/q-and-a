@@ -111,7 +111,17 @@ const HomePageStack: React.FC = () => {
         options={{
           title: "Question",
           headerTitle: '',
-        }} component={QuestionPage} />
+        }}
+        component={QuestionPage}
+      />
+      <HomeStack.Screen
+        name='Category'
+        options={{
+          title: "Category",
+          headerTitle: '',
+        }}
+        component={CategoryPage}
+      />
     </HomeStack.Navigator>
   );
 };

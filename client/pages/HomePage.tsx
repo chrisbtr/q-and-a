@@ -38,7 +38,13 @@ export const HomePage: React.FC<HomePageProps> = ({ navigation }) => {
   return (
     <View style={styles.container} >
       <ScrollView ref={ref}>
-        <Subheading style={styles.subheading}>Categories</Subheading>
+        <Button
+          style={styles.viewAllButton}
+          mode='text'
+          onPress={() => navigation.navigate("AllCategories", { screen: 'Categories' })}
+        >
+          View All
+        </Button>
         <ScrollView horizontal>
           {categories.map((category) => (
             <CategoryCard
@@ -46,7 +52,7 @@ export const HomePage: React.FC<HomePageProps> = ({ navigation }) => {
               key={`home_page_category_${category.code}`}
               source={{ uri: "https://picsum.photos/700" }}
               viewCategoryHandler={() => {
-                navigation.navigate('AllCategories', { screen: 'Category', params: { category } })
+                navigation.navigate('Home', { screen: 'Category', params: { category } });
               }}
             />
           ))}
@@ -79,14 +85,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  searchBar: {
-    width: "70%",
-    height: "70%",
-  },
   subheading: {
     marginTop: 5,
     marginLeft: 14,
     fontSize: 20,
+  },
+  viewAllButton: {
+    flexDirection: 'row-reverse',
+    marginTop: 16,
   },
   modal: {
     backgroundColor: "white",
