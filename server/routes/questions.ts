@@ -58,7 +58,26 @@ router
         const { id, categoryCode, take = 10, skip = 0, searchBy } = req.query;
 
         const count = await prisma.questions.count({
-          where: { isAnswered: { equals: true } },
+          where: {
+            isAnswered: { equals: true },
+            AND: {
+              categoryCode: { equals: categoryCode as string },
+              OR: [
+                {
+                  title: {
+                    contains: searchBy as string,
+                    mode: "insensitive",
+                  },
+                },
+                {
+                  content: {
+                    contains: searchBy as string,
+                    mode: "insensitive",
+                  },
+                },
+              ],
+            },
+          },
         });
 
         const allQuestions = await prisma.questions.findMany({
