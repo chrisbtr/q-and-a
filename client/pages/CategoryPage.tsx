@@ -1,11 +1,12 @@
 import React from "react";
-import { StyleSheet, ScrollView, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Subheading, Button } from "react-native-paper";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { AllCategoriesStackParamList } from "./Main";
-import QuestionCard from "../Components/QuestionCard";
+import QuestionList from "../Components/QuestionList";
+import { Question } from "../api/questions";
 
 export type CategoryPageProps = NativeStackScreenProps<
   AllCategoriesStackParamList,
@@ -20,35 +21,27 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ navigation }) => {
     navigation.setOptions({ headerTitle: route.params.category.name });
   }, []);
 
+  const handleQuestionPress = (question: Question) => {
+    navigation.navigate('Question', { question });
+  };
+
+  if (category.questions.length) {
+    return <QuestionList getAllQuestionParams={{ categoryCode: category.code }} onQuestionPress={handleQuestionPress} />;
+  }
+
   return (
-    <ScrollView>
-      {category.questions.length ? (
-        category.questions.map((question) => (
-          <QuestionCard
-            id={question.id}
-            key={`${category.code}_${question.id}`}
-            category={category.name}
-            subject={question.subject}
-            answers={question.answers}
-            question={question.content}
-            onPress={() => navigation.navigate('Question', { question })}
-          />
-        ))
-      ) : (
-        <View style={styles.noQuestions}>
-          <Subheading style={styles.subheading}>
-            No questions added yet
-          </Subheading>
-          <Button icon="plus-box-outline">Add a question</Button>
-          <Button
-            icon="keyboard-backspace"
-            onPress={() => navigation.goBack()}
-          >
-            Go Back
-          </Button>
-        </View>
-      )}
-    </ScrollView>
+    <View style={styles.noQuestions}>
+      <Subheading style={styles.subheading}>
+        No questions added yet
+      </Subheading>
+      <Button icon="plus-box-outline">Add a question</Button>
+      <Button
+        icon="keyboard-backspace"
+        onPress={() => navigation.goBack()}
+      >
+        Go Back
+      </Button>
+    </View>
   );
 };
 
