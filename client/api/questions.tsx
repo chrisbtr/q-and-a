@@ -35,14 +35,14 @@ type AllQuestionResponseData = {
   questions: QuestionResponseData[];
 };
 
-type CreateQuestionData = {
+export type CreateQuestionParams = {
   title: string;
   categoryCode: string;
   content: string;
   subject?: string;
 };
 
-type GetAllQuestionData = {
+export type GetAllQuestionParams = {
   categoryCode?: string;
   query?: string;
   take?: number;
@@ -52,12 +52,12 @@ type GetAllQuestionData = {
 export const questionsApi = {
   get: (id: number) => entryPoint.get<QuestionResponseData>(`/questions/${id}`),
 
-  getAll: ({ categoryCode, query, take, skip }: GetAllQuestionData = {}) =>
+  getAll: ({ categoryCode, query, take, skip }: GetAllQuestionParams = {}) =>
     entryPoint.get<AllQuestionResponseData>("/questions", {
       params: { categoryCode, searchBy: query, take, skip },
     }),
 
-  create: ({ title, categoryCode, content, subject }: CreateQuestionData) =>
+  create: ({ title, categoryCode, content, subject }: CreateQuestionParams) =>
     entryPoint
       .post<QuestionResponseData>("/questions", {
         title,
