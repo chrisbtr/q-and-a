@@ -1,7 +1,13 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SafeAreaView, StyleSheet, ActivityIndicator } from "react-native";
-import { Appbar, IconButton, Button, Subheading, useTheme } from "react-native-paper";
+import {
+  Appbar,
+  IconButton,
+  Button,
+  Subheading,
+  useTheme,
+} from "react-native-paper";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { NavigatorScreenParams } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -23,7 +29,8 @@ export type HomeStackParamList = {
   HomePage: undefined;
   AllQuestions: undefined;
   Search: {
-    query: string,
+    query: string;
+    categoryCode?: string;
   };
   Category: {
     category: Category;
@@ -59,21 +66,26 @@ export type MainTabsParamList = {
 
 const Tab = createMaterialBottomTabNavigator<MainTabsParamList>();
 const HomeStack = createNativeStackNavigator<HomeStackParamList>();
-const AllCategoriesStack = createNativeStackNavigator<AllCategoriesStackParamList>();
-const AllQuestionsStack = createNativeStackNavigator<AllQuestionsStackParamList>();
+const AllCategoriesStack =
+  createNativeStackNavigator<AllCategoriesStackParamList>();
+const AllQuestionsStack =
+  createNativeStackNavigator<AllQuestionsStackParamList>();
 
 const AllQuestionsPageStack: React.FC = () => {
   const theme = useTheme();
 
   return (
-    <AllQuestionsStack.Navigator initialRouteName="Questions" screenOptions={{
-      headerBackTitle: "Back",
-      headerStyle: { backgroundColor: theme.colors.primary },
-      headerTitleStyle: { ...theme.fonts.medium },
-      headerTintColor: theme.colors.background,
-    }}>
-      <AllQuestionsStack.Screen name='Questions' component={AllQuestionsPage} />
-      <AllQuestionsStack.Screen name='Question' component={QuestionPage} />
+    <AllQuestionsStack.Navigator
+      initialRouteName="Questions"
+      screenOptions={{
+        headerBackTitle: "Back",
+        headerStyle: { backgroundColor: theme.colors.primary },
+        headerTitleStyle: { ...theme.fonts.medium },
+        headerTintColor: theme.colors.background,
+      }}
+    >
+      <AllQuestionsStack.Screen name="Questions" component={AllQuestionsPage} />
+      <AllQuestionsStack.Screen name="Question" component={QuestionPage} />
     </AllQuestionsStack.Navigator>
   );
 };
@@ -89,15 +101,14 @@ const HomePageStack: React.FC = () => {
         headerStyle: { backgroundColor: theme.colors.primary },
         headerTitleStyle: { ...theme.fonts.medium },
         headerTintColor: theme.colors.background,
-        //header: (props) => <StackHeader {...props} />,
       }}
-    // screenOptions={{ header: (props) => <StackHeader {...props} /> }}
     >
       <HomeStack.Screen
         name="HomePage"
         options={{
           title: "Home",
-          header: (props) => <StackHeader {...props} />
+          header: (props) => <StackHeader {...props} />,
+          headerTitle: "",
         }}
         component={HomePage}
       />
@@ -105,23 +116,23 @@ const HomePageStack: React.FC = () => {
         name="Search"
         options={{
           title: "Search",
-          header: (props) => <StackHeader {...props} />
+          header: (props) => <StackHeader {...props} />,
         }}
         component={SearchPage}
       />
       <HomeStack.Screen
-        name='Question'
+        name="Question"
         options={{
           title: "Question",
-          headerTitle: '',
+          headerTitle: "",
         }}
         component={QuestionPage}
       />
       <HomeStack.Screen
-        name='Category'
+        name="Category"
         options={{
           title: "Category",
-          headerTitle: '',
+          headerTitle: "",
         }}
         component={CategoryPage}
       />
@@ -140,7 +151,6 @@ const AllCategoriesPageStack: React.FC<AllCategoriesStackParamList> = () => {
         headerStyle: { backgroundColor: theme.colors.primary },
         headerTitleStyle: { ...theme.fonts.medium },
         headerTintColor: theme.colors.background,
-        //header: (props) => <StackHeader {...props} />,
       }}
     >
       <AllCategoriesStack.Screen
@@ -148,22 +158,21 @@ const AllCategoriesPageStack: React.FC<AllCategoriesStackParamList> = () => {
         component={AllCategoriesPage}
         options={{
           title: "Categories",
-          //header: (props) => <StackHeader {...props} />,
         }}
       />
       <AllCategoriesStack.Screen
         name="Category"
         options={{
           title: "Category",
-          headerTitle: '',
+          headerTitle: "",
         }}
         component={CategoryPage}
       />
       <AllCategoriesStack.Screen
-        name='Question'
+        name="Question"
         options={{
           title: "Question",
-          headerTitle: '',
+          headerTitle: "",
         }}
         component={QuestionPage}
       />
@@ -240,7 +249,11 @@ const Main: React.FC = () => {
             options={{
               title: "Questions",
               tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="compass" color={color} size={26} />
+                <MaterialCommunityIcons
+                  name="compass"
+                  color={color}
+                  size={26}
+                />
               ),
             }}
           />

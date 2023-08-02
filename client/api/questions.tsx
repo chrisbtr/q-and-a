@@ -1,13 +1,13 @@
 import entryPoint from "./entryPoint";
 
 export type Answer = {
-  id: number,
-  userId: number,
-  questionId: number,
-  content: string,
-  createdAt: Date,
-  editedAt?: Date,
-}
+  id: number;
+  userId: number;
+  questionId: number;
+  content: string;
+  createdAt: Date;
+  editedAt?: Date;
+};
 
 export type Question = {
   id: number;
@@ -54,7 +54,12 @@ export const questionsApi = {
 
   getAll: ({ categoryCode, query, take, skip }: GetAllQuestionParams = {}) =>
     entryPoint.get<AllQuestionResponseData>("/questions", {
-      params: { categoryCode, searchBy: query, take, skip },
+      params: {
+        categoryCode: categoryCode === "" ? undefined : categoryCode,
+        searchBy: query,
+        take,
+        skip,
+      },
     }),
 
   create: ({ title, categoryCode, content, subject }: CreateQuestionParams) =>

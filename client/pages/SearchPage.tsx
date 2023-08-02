@@ -1,14 +1,14 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { ActivityIndicator, Text, Button } from 'react-native-paper';
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { ActivityIndicator, Text, Button } from "react-native-paper";
 
-import { HomeStackParamList } from './Main';
-import questionsApi, { Question } from '../api/questions';
-import theme from '../theme';
-import QuestionCard from '../Components/QuestionCard';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store';
+import { HomeStackParamList } from "./Main";
+import questionsApi, { Question } from "../api/questions";
+import theme from "../theme";
+import QuestionList from "../Components/QuestionList";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 export type SearchPageProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -25,23 +25,38 @@ const SearchPage: React.FC<SearchPageProps> = ({ navigation, route }) => {
 
   const [pending, setPending] = React.useState(true);
   const [failed, setFailed] = React.useState(false);
-  const [questions, setQuestions] = React.useState<Question[]>([])
+  const [questions, setQuestions] = React.useState<Question[]>([]);
 
-  const { query } = route.params;
+  const { query, categoryCode } = route.params;
 
   React.useEffect(() => {
-    questionsApi.getAll({ query }).then(res => {
-      if (res.status === 200) {
-        setQuestions(res.data.questions);
-        return;
-      }
-      setFailed(true);
-    }).catch(() => {
-      setFailed(true);
-    }).finally(() => {
-      setPending(false);
-    })
-  }, [])
+    navigation.setOptions({ headerTitle: query });
+  }, []);
+
+  const handleQuestionPress = (question: Question) => {
+    navigation.navigate("Question", { question });
+  };
+
+  React.useEffect(() => {
+    questionsApi
+      .getAll({
+        query,
+        categoryCode: categoryCode === "" ? undefined : categoryCode,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          setQuestions(res.data.questions);
+          return;
+        }
+        setFailed(true);
+      })
+      .catch(() => {
+        setFailed(true);
+      })
+      .finally(() => {
+        setPending(false);
+      });
+  }, []);
 
   if (pending) {
     return (
@@ -61,45 +76,33 @@ const SearchPage: React.FC<SearchPageProps> = ({ navigation, route }) => {
   if (questions.length === 0) {
     return (
       <View style={styles.centeredContainer}>
-        <Text style={styles.centeredText}>
-          Could not find a match for:
-        </Text>
-        <Text style={[styles.centeredText, { fontWeight: 'bold' }]}>
+        <Text style={styles.centeredText}>Could not find a match for:</Text>
+        <Text style={[styles.centeredText, { fontWeight: "bold" }]}>
           {route.params.query}
         </Text>
       </View>
     );
   }
   return (
-    <ScrollView>
-      {questions.map(question => (
-        <QuestionCard
-          key={question.id}
-          id={question.id}
-          subject={question.subject}
-          category={getCategoryName(question.categoryCode) || ""}
-          question={question.content}
-          answers={question.answers}
-          onPress={() => navigation.navigate('Question', { question })}
-        />
-      )
-      )}
-    </ScrollView>
+    <QuestionList
+      getAllQuestionParams={{ query, categoryCode }}
+      onQuestionPress={handleQuestionPress}
+    />
   );
 };
 
 const styles = StyleSheet.create({
   errorText: {
-    textAlign: 'center',
+    textAlign: "center",
     color: theme.colors.error,
     fontSize: 16,
   },
   centeredText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   centeredContainer: {
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   container: {
     flex: 1,
