@@ -10,6 +10,7 @@ npm-debug.*
 *.orig.*
 web-build/
 api/entryPoint.tsx
+package-lock.json
 
 # macOS
 .DS_Store
